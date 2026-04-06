@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { LanguageService } from '../../services/Language/language-service';
 import { ThemeService } from '../../services/Theme/theme-service';
+import { submit } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-login',
@@ -29,5 +30,7 @@ export class Login {
     event.preventDefault();
     this.isLoading.set(true);
     setTimeout(() => this.isLoading.set(false), 2000);
+
+    // submit();
   }
 }

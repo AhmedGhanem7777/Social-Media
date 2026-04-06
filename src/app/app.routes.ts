@@ -14,7 +14,13 @@ export const routes: Routes = [
     {
         path: '', loadComponent: () => import('./core/layouts/blank-layout/blank-layout').then(c => c.BlankLayout),
         children: [
-            { path: 'home', canActivate: [authGuard], loadComponent: () => import('./features/home/home').then(c => c.Home), title: 'Home Page' }
+            { path: 'home', canActivate: [authGuard], loadComponent: () => import('./features/home/home').then(c => c.Home), title: 'Home Page' },
+            { path: 'reels', canActivate: [authGuard], loadComponent: () => import('./features/reels/reels').then(c => c.Reels), title: 'Reels Page' },
+            { path: 'chat', canActivate: [authGuard], loadComponent: () => import('./features/chat/chat').then(c => c.Chat), title: 'Chat Page' },
+            { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./features/profile/profile').then(c => c.Profile), title: 'Profile Page' },
+            { path: 'saved', canActivate: [authGuard], loadComponent: () => import('./features/saved/saved').then(c => c.Saved), title: 'Saved Page' },
+            { path: 'friends', canActivate: [authGuard], loadComponent: () => import('./features/friends/friends').then(c => c.Friends), title: 'Friends Page' },
+            { path: 'settings', canActivate: [authGuard], loadComponent: () => import('./features/settings/settings').then(c => c.Settings), title: 'Settings Page' }
         ]
     },
     {

@@ -1,1 +1,26 @@
-<p>home works!</p>
+<div class="container max-w-2xl mx-auto px-4 py-6">
+
+    <!-- Stories — Card variant="elevated" mb-6 -->
+    <div class="rounded-xl bg-card text-card-foreground shadow-soft transition-all duration-300 mb-6">
+        <div class="p-4">
+            <app-stories-section />
+        </div>
+    </div>
+
+    <!-- Create Post -->
+    <div class="mb-6">
+        <app-create-post-card />
+    </div>
+
+    <!-- Posts feed -->
+    <div class="space-y-6">
+        @for (post of posts; track post.id; let i = $index) {
+        <div class="animate-fade-in-up" [style.animation-delay]="i * 100 + 'ms'">
+            <app-post-card [user]="post.user" [content]="post.content" [image]="post.image" [likes]="post.likes"
+                [comments]="post.comments" [shares]="post.shares" [timeAgo]="post.timeAgo"
+                [isLiked]="post.isLiked ?? false" [isSaved]="post.isSaved ?? false" />
+        </div>
+        }
+    </div>
+
+</div>
