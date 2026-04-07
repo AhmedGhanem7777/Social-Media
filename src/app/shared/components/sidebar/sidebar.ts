@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LanguageService } from '../../../core/services/Language/language-service';
 import { SidebarNavItem } from '../../../core/models/navItem';
 import { SuggestedUser } from '../../../core/models/user';
+import { Friend } from '../../../core/services/Friend/friend';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,9 +11,10 @@ import { SuggestedUser } from '../../../core/models/user';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class Sidebar {
+export class Sidebar implements OnInit {
   readonly lang = inject(LanguageService);
   private readonly router = inject(Router);
+  private readonly friendService = inject(Friend);
 
   readonly mainNavItems: SidebarNavItem[] = [
     { path: '/', icon: 'home', label: 'nav.feed' },
@@ -27,11 +29,25 @@ export class Sidebar {
     { path: '/settings', icon: 'settings', label: 'nav.settings' },
   ];
 
-  readonly suggestedUsers: SuggestedUser[] = [
-    { id: 1, name: 'Sarah Ahmed', username: '@sarah_a', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
-    { id: 2, name: 'Omar Hassan', username: '@omar_h', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
-    { id: 3, name: 'Layla Noor', username: '@layla_n', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
-  ];
+  suggestedUsers = signal<SuggestedUser[]>([]);
+
+  ngOnInit(): void {
+    this.GetSuggestedUsers();
+  }
+
+  GetSuggestedUsers(): void {
+    this.friendService.GetSuggestedUsers({ pageIndex: 1, pageSize: 5 }).subscribe({
+      next: (users) => {
+        if (users.isSuccess) {
+          console.log(users);
+
+          this.suggestedUsers.set(users.data.data);
+        }
+      }, error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
   isActive(path: string): boolean {
     return this.router.url === path;

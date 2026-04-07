@@ -1,6 +1,6 @@
 export interface SuggestedUser {
-    id: number;
-    name: string;
+    _id: number;
+    displayName: string;
     username: string;
-    avatar: string;
+    profilePicture: string;
 }

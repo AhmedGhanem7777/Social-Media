@@ -9,7 +9,7 @@ export const headersInterceptor: HttpInterceptorFn = (req, next) => {
   req = req.clone({
     setHeaders: {
       'Accept-Language': lang,
-      ...(cookieService.check('token') && { Token: cookieService.get('token') }),
+      ...(cookieService.check('token') && { Authorization: `Bearer ${cookieService.get('token')}` }),
     }
   });
 
