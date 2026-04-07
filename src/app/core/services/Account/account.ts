@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { LoginData, RegisterData } from '../../models/account';
+import { ForgotPasswordData, LoginData, RegisterData, ResetPasswordData } from '../../models/account';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -21,7 +21,15 @@ export class Account {
     return this.httpClient.post(`${this.baseUrl}/api/Account/register`, registerData);
   }
 
-  CheckUserExist(identifier: string): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}/api/Account/exist-user/${identifier}`);
+  ForgotPassword(forgotPasswordData: ForgotPasswordData): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/api/Account/forgot-password`, forgotPasswordData);
   }
+
+  ResetPassword(resetData: ResetPasswordData): Observable<any> {
+    return this.httpClient.put(`${this.baseUrl}/api/Account/reset-password`, resetData);
+  }
+
+  // CheckUserExist(identifier: string): Observable<any> {
+  //   return this.httpClient.get(`${this.baseUrl}/api/Account/exist-user/${identifier}`);
+  // }
 }

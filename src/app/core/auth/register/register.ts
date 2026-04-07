@@ -47,8 +47,10 @@ export class Register {
     required(schemaPath.confirmPassword, { message: 'Confirm password is required' });
     email(schemaPath.email, { message: 'Invalid email format' });
 
+    // Password validation
     pattern(schemaPath.password, /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/, { message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character' });
 
+    // Confirm password validation
     validate(schemaPath.confirmPassword, ({ value, valueOf }) => {
       const confirmPassword = value();
       const password = valueOf(schemaPath.password);
@@ -61,6 +63,7 @@ export class Register {
       return null;
     });
 
+    // Username validation
     validateHttp(schemaPath.username, {
       request: ({ value }) => `${environment.baseUrl}/api/Account/exist-user/${value()}`,
       onSuccess: (response: any) => {
@@ -77,6 +80,7 @@ export class Register {
       })
     })
 
+    // Email validation
     validateHttp(schemaPath.email, {
       request: ({ value }) => `${environment.baseUrl}/api/Account/exist-user/${value()}`,
       onSuccess: (response: any) => {
@@ -166,6 +170,7 @@ export class Register {
     reader.readAsDataURL(file);
   }
 
+  // Reset the registration form to its initial state
   resetForm(): void {
     this.registerationModel.set({
       firstName: '',

@@ -12,3 +12,13 @@ export interface RegisterData {
     password: string;
     confirmPassword: string;
 }
+
+export interface ForgotPasswordData {
+    email: string
+}
+
+export interface ResetPasswordData {
+    email: string;
+    otp: string;
+    newPassword: string;
+}

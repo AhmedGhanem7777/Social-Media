@@ -1,37 +1,57 @@
 import { Component, inject, signal } from '@angular/core';
 import { LanguageService } from '../../services/Language/language-service';
 import { ThemeService } from '../../services/Theme/theme-service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { form, submit, FormField, email, required } from '@angular/forms/signals';
+import { Account } from '../../services/Account/account';
+import { ForgotPasswordData } from '../../models/account';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [RouterLink],
+  imports: [RouterLink, FormField],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.css',
 })
 export class ForgotPassword {
   readonly languageService = inject(LanguageService);
   readonly themeService = inject(ThemeService);
+  readonly accountService = inject(Account);
+  readonly router = inject(Router);
 
   isLoading = signal(false);
-  emailSent = signal(false);
+  errorMsg = signal('');
+
+  forgotPasswordModel = signal<ForgotPasswordData>({
+    email: ''
+  })
+  forgotPasswordForm = form(this.forgotPasswordModel, schemaPath => {
+    email(schemaPath.email, { message: 'Invalid email format' })
+    required(schemaPath.email, { message: 'Email is required' })
+  })
+
+  handleSubmit(event: Event): void {
+    event.preventDefault();
+    this.isLoading.set(true);
+    this.errorMsg.set('');
+
+    submit(this.forgotPasswordForm, async () => {
+      await this.accountService.ForgotPassword(this.forgotPasswordModel()).subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.isLoading.set(false);
+            this.router.navigate(['/reset-password', this.forgotPasswordModel().email]);
+          }
+        }, error: (err) => {
+          this.errorMsg.set(err.error.error.description);
+          this.isLoading.set(false);
+        }
+      })
+    })
+  }
 
   toggleLanguage(): void {
     this.languageService.setLanguage(
       this.languageService.language() === 'en' ? 'ar' : 'en'
     );
-  }
-
-  handleSubmit(event: Event): void {
-    event.preventDefault();
-    this.isLoading.set(true);
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.emailSent.set(true);
-    }, 2000);
-  }
-
-  resend(): void {
-    this.emailSent.set(false);
   }
 }
