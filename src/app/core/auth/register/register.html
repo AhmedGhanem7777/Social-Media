@@ -76,7 +76,46 @@
 
             <!-- CardContent -->
             <div class="p-5 pt-0">
-                <form (ngSubmit)="handleSubmit($event)" class="space-y-4">
+                @if (registerMessage()) {
+                <div
+                    class="mb-4 p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary animate-in fade-in slide-in-from-top-2">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium leading-tight">{{ registerMessage() }}</span>
+                    </div>
+
+                    <a href="https://mail.google.com" target="_blank"
+                        class="inline-flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-primary text-white text-xs font-semibold hover:opacity-90 transition-all shadow-glow active:scale-[0.98]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                        {{ languageService.t('auth.goToEmail') }}
+                    </a>
+                </div>
+                }
+
+                @if (errorMessage()) {
+                <div
+                    class="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" x2="12" y1="8" y2="12" />
+                        <line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                    <span>{{ errorMessage() }}</span>
+                </div>
+                }
+
+                <form (submit)="handleSubmit($event)" class="space-y-4">
 
                     <!-- ── Profile Picture ─────────────────────────────── -->
                     <div class="flex flex-col items-center gap-3">
@@ -147,8 +186,8 @@
                                         <circle cx="12" cy="7" r="4" />
                                     </svg>
                                 </div>
-                                <input type="text" [placeholder]="languageService.t('auth.firstNamePlaceholder')"
-                                    required class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                                <input [formField]="registerationForm.firstName" type="text"
+                                    [placeholder]="languageService.t('auth.firstNamePlaceholder')" class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                              placeholder:text-muted-foreground focus-visible:outline-none
                              disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                              border-border bg-card h-11 text-sm px-4
@@ -173,8 +212,8 @@
                                         <circle cx="12" cy="7" r="4" />
                                     </svg>
                                 </div>
-                                <input type="text" [placeholder]="languageService.t('auth.lastNamePlaceholder')"
-                                    required class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                                <input [formField]="registerationForm.lastName" type="text"
+                                    [placeholder]="languageService.t('auth.lastNamePlaceholder')" class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                              placeholder:text-muted-foreground focus-visible:outline-none
                              disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                              border-border bg-card h-11 text-sm px-4
@@ -200,7 +239,8 @@
                                     <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
                                 </svg>
                             </div>
-                            <input type="text" placeholder="@ahmedmohamed" required class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                            <input [formField]="registerationForm.username" type="text" placeholder="@ahmedmohamed"
+                                class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
@@ -225,7 +265,8 @@
                                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                                 </svg>
                             </div>
-                            <input type="email" placeholder="email@example.com" required class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                            <input [formField]="registerationForm.email" type="email" placeholder="email@example.com"
+                                class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
@@ -250,7 +291,8 @@
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                 </svg>
                             </div>
-                            <input [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" required class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                            <input [formField]="registerationForm.password"
+                                [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
@@ -300,8 +342,8 @@
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                 </svg>
                             </div>
-                            <input [type]="showConfirmPassword() ? 'text' : 'password'" placeholder="••••••••" required
-                                class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
+                            <input [formField]="registerationForm.confirmPassword"
+                                [type]="showConfirmPassword() ? 'text' : 'password'" placeholder="••••••••" class="flex w-full rounded-lg border ring-offset-background transition-all duration-300
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
