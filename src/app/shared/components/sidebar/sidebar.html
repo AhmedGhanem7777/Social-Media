@@ -105,7 +105,7 @@
                 class="flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors group">
                 <div class="w-10 h-10 rounded-full ring-2 ring-transparent group-hover:ring-primary/30
                           transition-all overflow-hidden flex-shrink-0">
-                    <img [src]="user.profilePicture" [alt]="user.displayName" class="w-full h-full object-cover" />
+                    <img [src]="user.profilePicture || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'" [alt]="user.displayName" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium truncate">{{ user.displayName }}</p>

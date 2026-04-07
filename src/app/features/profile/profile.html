@@ -1,1 +1,244 @@
-<p>profile works!</p>
+    <div class="max-w-4xl mx-auto" [dir]="lang.direction()">
+
+        <!-- ── Cover Image ───────────────────────────────────────── -->
+        <div
+            class="relative h-48 sm:h-64 md:h-80 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/10 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop" alt="Cover"
+                class="w-full h-full object-cover" />
+            <!-- Gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+
+            <!-- Edit Cover — Button: variant="secondary" size="sm" -->
+            <button type="button" class="absolute bottom-4 right-4 inline-flex items-center justify-center gap-2
+                   whitespace-nowrap rounded-md text-sm font-medium ring-offset-background
+                   transition-all duration-300 focus-visible:outline-none
+                   focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                   disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]
+                   bg-secondary text-secondary-foreground hover:bg-secondary/80
+                   h-9 px-3">
+                <!-- Camera icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                    <circle cx="12" cy="13" r="3" />
+                </svg>
+                Edit Cover
+            </button>
+        </div>
+
+        <!-- ── Profile Header ─────────────────────────────────────── -->
+        <div class="relative px-4 sm:px-6">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between -mt-16 sm:-mt-20">
+
+                <!-- Avatar -->
+                <div class="relative group z-10">
+                    <!-- Story-style ring -->
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-story p-1 shadow-glow">
+                        <div class="w-full h-full rounded-full bg-background p-1">
+                            <div class="w-full h-full rounded-full overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face"
+                                    alt="Profile" class="w-full h-full object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Camera overlay — Button: variant="secondary" size="iconSm" -->
+                    <button type="button" class="absolute bottom-2 right-2
+                       opacity-0 group-hover:opacity-100 transition-opacity
+                       inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
+                       text-sm font-medium ring-offset-background transition-all duration-300
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                       disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]
+                       bg-secondary text-secondary-foreground hover:bg-secondary/80
+                       h-8 w-8" aria-label="Change avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                            <circle cx="12" cy="13" r="3" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Edit Profile — Button: variant="gradient" -->
+                <div class="flex gap-2 mt-4 sm:mt-0 sm:mb-4">
+                    <button type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
+                       text-sm font-medium ring-offset-background transition-all duration-300
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                       disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]
+                       bg-gradient-primary text-white hover:opacity-90 hover:shadow-glow
+                       h-10 px-4 py-2">
+                        <!-- Edit icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        {{ lang.t('profile.editProfile') }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="mt-4">
+                <h1 class="text-2xl sm:text-3xl font-bold">John Doe</h1>
+                <p class="text-muted-foreground">&#64;johndoe</p>
+
+                <p class="mt-3 text-foreground max-w-xl">
+                    Digital creator &amp; travel enthusiast 🌍 | Sharing moments that matter ✨ |
+                    Photography is my passion 📷
+                </p>
+
+                <!-- Meta -->
+                <div class="flex flex-wrap items-center gap-4 mt-4 text-sm text-muted-foreground">
+                    <span class="flex items-center gap-1">
+                        <!-- MapPin -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Dubai, UAE
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <!-- Link -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                        <a href="#" class="text-primary hover:underline underline-offset-4">johndoe.com</a>
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <!-- Calendar -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                        </svg>
+                        Joined March 2020
+                    </span>
+                </div>
+
+                <!-- Stats -->
+                <div class="flex gap-6 mt-6">
+                    @for (stat of stats; track stat.label) {
+                    <div class="text-center sm:text-left">
+                        <span class="font-bold text-lg">{{ stat.value }}</span>
+                        <span class="text-muted-foreground text-sm ms-1">{{ stat.label }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Tabs ───────────────────────────────────────────────── -->
+        <div class="mt-8">
+
+            <!-- Tab List -->
+            <div class="w-full flex border-b border-border">
+                @for (tab of tabs; track tab.id) {
+                <button type="button" (click)="activeTab.set(tab.id)" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium
+                       border-b-2 transition-all duration-200 -mb-px
+                       focus-visible:outline-none" [class]="activeTab() === tab.id
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'">
+                    <!-- Tab icon -->
+                    @switch (tab.id) {
+                    @case ('posts') {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="7" height="7" x="3" y="3" rx="1" />
+                        <rect width="7" height="7" x="14" y="3" rx="1" />
+                        <rect width="7" height="7" x="14" y="14" rx="1" />
+                        <rect width="7" height="7" x="3" y="14" rx="1" />
+                    </svg>
+                    }
+                    @case ('saved') {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                    </svg>
+                    }
+                    @case ('friends') {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    }
+                    }
+                    {{ tab.label }}
+                </button>
+                }
+            </div>
+
+            <!-- Tab Panels -->
+
+            <!-- Posts -->
+            @if (activeTab() === 'posts') {
+            <div class="grid grid-cols-3 gap-1 sm:gap-2">
+                @for (post of profilePosts; track post.id; let i = $index) {
+                <div class="aspect-square relative group cursor-pointer overflow-hidden animate-scale-in"
+                    [style.animation-delay]="i * 50 + 'ms'">
+                    <img [src]="post.image" alt=""
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity
+                              flex items-center justify-center">
+                        <span class="text-white font-semibold">❤️ {{ post.likes }}</span>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Saved -->
+            @if (activeTab() === 'saved') {
+            <div class="grid grid-cols-3 gap-1 sm:gap-2">
+                @for (post of savedPosts; track post.id; let i = $index) {
+                <div class="aspect-square relative group cursor-pointer overflow-hidden animate-scale-in"
+                    [style.animation-delay]="i * 50 + 'ms'">
+                    <img [src]="post.image" alt=""
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity
+                              flex items-center justify-center">
+                        <!-- Bookmark filled -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white fill-white"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                        </svg>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Friends -->
+            @if (activeTab() === 'friends') {
+            <!-- Card: variant="elevated" -->
+            <div class="rounded-xl bg-card text-card-foreground shadow-soft transition-all duration-300 mt-4">
+                <div class="p-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        @for (friend of friends; track friend.id; let i = $index) {
+                        <div class="flex flex-col items-center gap-2 p-4 rounded-xl
+                             hover:bg-accent transition-colors cursor-pointer group animate-fade-in"
+                            [style.animation-delay]="i * 50 + 'ms'">
+                            <div class="w-16 h-16 rounded-full ring-2 ring-transparent
+                                  group-hover:ring-primary/50 transition-all overflow-hidden">
+                                <img [src]="friend.avatar" [alt]="friend.name" class="w-full h-full object-cover" />
+                            </div>
+                            <span class="text-sm font-medium text-center">{{ friend.name }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
