@@ -1,25 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { LanguageService } from '../../services/Language/language-service';
 import { ThemeService } from '../../services/Theme/theme-service';
-import { submit } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-forgot-password',
   imports: [RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './forgot-password.html',
+  styleUrl: './forgot-password.css',
 })
-export class Login {
+export class ForgotPassword {
   readonly languageService = inject(LanguageService);
   readonly themeService = inject(ThemeService);
 
-  showPassword = signal(false);
   isLoading = signal(false);
-
-  toggleShowPassword(): void {
-    this.showPassword.update(v => !v);
-  }
+  emailSent = signal(false);
 
   toggleLanguage(): void {
     this.languageService.setLanguage(
@@ -30,8 +25,13 @@ export class Login {
   handleSubmit(event: Event): void {
     event.preventDefault();
     this.isLoading.set(true);
-    setTimeout(() => this.isLoading.set(false), 2000);
+    setTimeout(() => {
+      this.isLoading.set(false);
+      this.emailSent.set(true);
+    }, 2000);
+  }
 
-    // submit();
+  resend(): void {
+    this.emailSent.set(false);
   }
 }

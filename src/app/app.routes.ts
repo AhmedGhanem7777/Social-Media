@@ -9,6 +9,8 @@ export const routes: Routes = [
         children: [
             { path: 'login', canActivate: [isLoggedGuard], loadComponent: () => import('./core/auth/login/login').then(c => c.Login), title: 'Login Page' },
             { path: 'register', canActivate: [isLoggedGuard], loadComponent: () => import('./core/auth/register/register').then(c => c.Register), title: 'Register Page' },
+            { path: 'forgot-password', canActivate: [isLoggedGuard], loadComponent: () => import('./core/auth/forgot-password/forgot-password').then(c => c.ForgotPassword), title: 'Forgot Password Page' },
+            { path: 'reset-password', canActivate: [isLoggedGuard], loadComponent: () => import('./core/auth/reset-password/reset-password').then(c => c.ResetPassword), title: 'Reset Password Page' },
         ]
     },
     {
