@@ -47,7 +47,7 @@ export class Register {
     required(schemaPath.confirmPassword, { message: 'Confirm password is required' });
     email(schemaPath.email, { message: 'Invalid email format' });
 
-    pattern(schemaPath.password, /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/, { message: 'Password must be at least 8 characters long and contain both letters and numbers' });
+    pattern(schemaPath.password, /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/, { message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character' });
 
     validate(schemaPath.confirmPassword, ({ value, valueOf }) => {
       const confirmPassword = value();
@@ -64,8 +64,7 @@ export class Register {
     validateHttp(schemaPath.username, {
       request: ({ value }) => `${environment.baseUrl}/api/Account/exist-user/${value()}`,
       onSuccess: (response: any) => {
-        console.log(response);
-        if (response.data) {
+        if (response.isSuccess) {
           return {
             kind: 'usernameTaken',
             message: 'Username is already taken'
@@ -81,8 +80,7 @@ export class Register {
     validateHttp(schemaPath.email, {
       request: ({ value }) => `${environment.baseUrl}/api/Account/exist-user/${value()}`,
       onSuccess: (response: any) => {
-        console.log(response);
-        if (response.data) {
+        if (response.isSuccess) {
           return {
             kind: 'emailTaken',
             message: 'Email is already taken'
@@ -122,8 +120,8 @@ export class Register {
         next: (res) => {
           if (res.isSuccess) {
             this.isLoading.set(false);
-            this.resetForm();
             this.registerMessage.set(res.data);
+            this.resetForm();
             console.log(res);
           }
         }, error: (err) => {

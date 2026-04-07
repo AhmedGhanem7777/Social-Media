@@ -244,10 +244,34 @@
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
-                           pl-10 rtl:pl-5 rtl:pr-10
+                           pl-10 pr-10 rtl:pl-10 rtl:pr-10
                            focus-visible:ring-2 focus-visible:ring-primary/50
                            focus-visible:border-primary/50 focus-visible:shadow-glow" />
+
+                            <!-- Status Indications -->
+                            <div
+                                class="absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                @if (registerationForm.username().pending()) {
+                                <div
+                                    class="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin">
+                                </div>
+                                } @else if (registerationForm.username().valid() &&
+                                registerationForm.username().value()) {
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5 text-green-500 animate-in zoom-in duration-300" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                }
+                            </div>
                         </div>
+                        @if (registerationForm.username().errors() && registerationForm.username().dirty() &&
+                        !registerationForm.username().valid()) {
+                        <p class="text-xs text-destructive animate-in fade-in slide-in-from-top-1 px-1">
+                            {{ registerationForm.username().errors()[0].message }}
+                        </p>
+                        }
                     </div>
 
                     <!-- ── Email ─────────────────────────────────────────── -->
@@ -270,10 +294,33 @@
                            placeholder:text-muted-foreground focus-visible:outline-none
                            disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                            border-border bg-card h-12 text-base px-5
-                           pl-10 rtl:pl-5 rtl:pr-10
+                           pl-10 pr-10 rtl:pl-10 rtl:pr-10
                            focus-visible:ring-2 focus-visible:ring-primary/50
                            focus-visible:border-primary/50 focus-visible:shadow-glow" />
+
+                            <!-- Status Indications -->
+                            <div
+                                class="absolute right-3 rtl:right-auto rtl:left-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                @if (registerationForm.email().pending()) {
+                                <div
+                                    class="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin">
+                                </div>
+                                } @else if (registerationForm.email().valid() && registerationForm.email().value()) {
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5 text-green-500 animate-in zoom-in duration-300" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                }
+                            </div>
                         </div>
+                        @if (registerationForm.email().errors() && registerationForm.email().dirty() &&
+                        !registerationForm.email().valid()) {
+                        <p class="text-xs text-destructive animate-in fade-in slide-in-from-top-1 px-1">
+                            {{ registerationForm.email().errors()[0].message }}
+                        </p>
+                        }
                     </div>
 
                     <!-- ── Password ──────────────────────────────────────── -->
@@ -325,6 +372,12 @@
                                 }
                             </button>
                         </div>
+                        @if (registerationForm.password().errors() && registerationForm.password().dirty() &&
+                        !registerationForm.password().valid()) {
+                        <p class="text-xs text-destructive animate-in fade-in slide-in-from-top-1 px-1">
+                            {{ registerationForm.password().errors()[0].message }}
+                        </p>
+                        }
                     </div>
 
                     <!-- ── Confirm Password ──────────────────────────────── -->
@@ -376,6 +429,12 @@
                                 }
                             </button>
                         </div>
+                        @if (registerationForm.confirmPassword().errors() && registerationForm.confirmPassword().dirty() &&
+                        !registerationForm.confirmPassword().valid()) {
+                        <p class="text-xs text-destructive animate-in fade-in slide-in-from-top-1 px-1">
+                            {{ registerationForm.confirmPassword().errors()[0].message }}
+                        </p>
+                        }
                     </div>
 
                     <!-- ── Submit ─────────────────────────────────────────── -->
