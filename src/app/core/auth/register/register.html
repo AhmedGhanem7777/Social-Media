@@ -429,7 +429,8 @@
                                 }
                             </button>
                         </div>
-                        @if (registerationForm.confirmPassword().errors() && registerationForm.confirmPassword().dirty() &&
+                        @if (registerationForm.confirmPassword().errors() && registerationForm.confirmPassword().dirty()
+                        &&
                         !registerationForm.confirmPassword().valid()) {
                         <p class="text-xs text-destructive animate-in fade-in slide-in-from-top-1 px-1">
                             {{ registerationForm.confirmPassword().errors()[0].message }}

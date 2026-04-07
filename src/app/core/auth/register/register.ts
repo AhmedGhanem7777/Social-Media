@@ -126,12 +126,10 @@ export class Register {
             this.isLoading.set(false);
             this.registerMessage.set(res.data);
             this.resetForm();
-            console.log(res);
           }
         }, error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.error?.description || 'Registration failed');
-          console.log(err);
         }
       })
     })
@@ -181,6 +179,7 @@ export class Register {
       password: '',
       confirmPassword: '',
     });
+
     this.avatarPreview.set(null);
     this.saveFile.set(null);
   }
