@@ -4,6 +4,7 @@ import { LanguageService } from '../../../core/services/Language/language-servic
 import { SidebarNavItem } from '../../../core/models/navItem';
 import { SuggestedUser } from '../../../core/models/user';
 import { Friend } from '../../../core/services/Friend/friend';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +16,13 @@ export class Sidebar implements OnInit {
   readonly lang = inject(LanguageService);
   private readonly router = inject(Router);
   private readonly friendService = inject(Friend);
+  private readonly cookieService = inject(CookieService);
 
   readonly mainNavItems: SidebarNavItem[] = [
     { path: '/', icon: 'home', label: 'nav.feed' },
     { path: '/reels', icon: 'film', label: 'nav.reels' },
     { path: '/chat', icon: 'message', label: 'nav.chat' },
-    { path: '/profile', icon: 'user', label: 'nav.profile' },
+    { path: `/profile/${this.cookieService.get("userId")}`, icon: 'user', label: 'nav.profile' },
   ];
 
   readonly secondaryNavItems: SidebarNavItem[] = [
@@ -36,7 +38,7 @@ export class Sidebar implements OnInit {
   }
 
   GetSuggestedUsers(): void {
-    this.friendService.GetSuggestedUsers({ pageIndex: 1, pageSize: 5 }).subscribe({
+    this.friendService.GetSuggestedUsers({ pageIndex: 1, pageSize: 20 }).subscribe({
       next: (users) => {
         if (users.isSuccess) {
           console.log(users);

@@ -66,12 +66,29 @@ export const translations: Record<Lang, Record<string, string>> = {
         'feed.like': 'Like',
         'feed.comment': 'Comment',
         'feed.share': 'Share',
+        'feed.reply': 'Reply',
+        'feed.replyTo': 'Reply to',
+        'feed.sharedAPost': 'shared a post',
+        'feed.writeComment': 'Write a comment…',
+        'feed.sharePost': 'Share Post',
+        'feed.sharePlaceholder': 'Say something about this post...',
+        'feed.cancel': 'Cancel',
         // Profile
         'profile.friends': 'Friends',
+        'profile.following': 'Following',
+        'profile.followers': 'Followers',
+        'profile.posts': 'Posts',
+        'profile.editProfile': 'Edit Profile',
+        'profile.editCover': 'Edit Cover',
         // Common
         'common.loading': 'Loading…',
         'common.lightMode': 'Light mode',
         'common.darkMode': 'Dark mode',
+        // Time
+        'time.now': 'Just now',
+        'time.minute': 'm',
+        'time.hour': 'h',
+        'time.day': 'd',
     },
     ar: {
         // Auth
@@ -138,11 +155,28 @@ export const translations: Record<Lang, Record<string, string>> = {
         'feed.like': 'إعجاب',
         'feed.comment': 'تعليق',
         'feed.share': 'مشاركة',
+        'feed.reply': 'رد',
+        'feed.replyTo': 'الرد على',
+        'feed.sharedAPost': 'شارك منشورًا',
+        'feed.writeComment': 'اكتب تعليقاً…',
+        'feed.sharePost': 'مشاركة المنشور',
+        'feed.sharePlaceholder': 'قل شيئاً عن هذا المنشور...',
+        'feed.cancel': 'إلغاء',
         // Profile
         'profile.friends': 'الأصدقاء',
+        'profile.following': 'المتابَعون',
+        'profile.followers': 'المتابِعون',
+        'profile.posts': 'المنشورات',
+        'profile.editProfile': 'تعديل الملف الشخصي',
+        'profile.editCover': 'تعديل غلاف الصفحة',
         // Common
         'common.loading': 'جارٍ التحميل…',
         'common.lightMode': 'الوضع الفاتح',
         'common.darkMode': 'الوضع الداكن',
+        // Time
+        'time.now': 'الآن',
+        'time.minute': 'د',
+        'time.hour': 'س',
+        'time.day': 'ي',
     },
 };

@@ -6,7 +6,7 @@
         <nav class="space-y-1">
             @for (item of mainNavItems; track item.path) {
             <a [routerLink]="item.path" class="block">
-                <button type="button" class="w-full justify-start gap-3 h-11 inline-flex items-center whitespace-nowrap rounded-lg
+                <button type="button" class="w-full justify-start gap-3 h-11 inline-flex items-center whitespace-nowrap rounded-lg cursor-pointer
                        text-sm font-medium ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50 px-4 py-2" [class]="isActive(item.path)
@@ -60,7 +60,7 @@
         <nav class="space-y-1">
             @for (item of secondaryNavItems; track item.path) {
             <a [routerLink]="item.path" class="block">
-                <button type="button" class="w-full justify-start gap-3 h-11 inline-flex items-center whitespace-nowrap rounded-lg
+                <button type="button" class="w-full justify-start gap-3 h-11 inline-flex items-center whitespace-nowrap rounded-lg cursor-pointer
                        text-sm font-medium ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50 px-4 py-2
@@ -102,17 +102,26 @@
 
             @for (user of suggestedUsers(); track user._id) {
             <a [routerLink]="'/user/' + user._id"
-                class="flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors group">
+                class="flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors group cursor-pointer">
                 <div class="w-10 h-10 rounded-full ring-2 ring-transparent group-hover:ring-primary/30
                           transition-all overflow-hidden flex-shrink-0">
-                    <img [src]="user.profilePicture || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'" [alt]="user.displayName" class="w-full h-full object-cover" />
+                    @if (user.profilePicture && user.profilePicture !== 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face') {
+                    <img [src]="user.profilePicture" [alt]="user.displayName" class="w-full h-full object-cover" />
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full p-2 text-muted-foreground"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    }
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium truncate">{{ user.displayName }}</p>
                     <p class="text-xs text-muted-foreground truncate">{{ user.username }}</p>
                 </div>
 
-                <button type="button" class="opacity-0 group-hover:opacity-100 transition-opacity
+                <button type="button" class="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer
                        inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium
                        ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2

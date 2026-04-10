@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ForgotPasswordData, LoginData, RegisterData, ResetPasswordData } from '../../models/account';
 import { CookieService } from 'ngx-cookie-service';
@@ -29,7 +29,29 @@ export class Account {
     return this.httpClient.put(`${this.baseUrl}/api/Account/reset-password`, resetData);
   }
 
-  // CheckUserExist(identifier: string): Observable<any> {
-  //   return this.httpClient.get(`${this.baseUrl}/api/Account/exist-user/${identifier}`);
-  // }
+  RefreshToken(): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}/api/Account/refreshToken`, {
+      withCredentials: true
+    });
+  }
+
+  RevokeToken(): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/api/Account/revokeToken`, {}, {
+      withCredentials: true
+    });
+  }
+
+  logout(): Observable<any> {
+    return this.RevokeToken().pipe(
+      tap(() => {
+        this.clearAuthData();
+      })
+    );
+  }
+
+  clearAuthData(): void {
+    this.cookieService.delete('token');
+    this.cookieService.delete('userId');
+    this.cookieService.delete('isLogin');
+  }
 }

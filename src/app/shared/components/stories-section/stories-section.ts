@@ -11,7 +11,7 @@ import { Story } from '../../../core/models/story';
 export class StoriesSection {
   readonly lang = inject(LanguageService);
   readonly stories: Story[] = [
-    { id: 0, username: 'Your Story', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face', hasUnseenStory: false, isOwnStory: true },
+    { id: 0, username: 'Your Story', avatar: null, hasUnseenStory: false, isOwnStory: true },
     { id: 1, username: 'sarah_ahmed', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face', hasUnseenStory: true },
     { id: 2, username: 'omar_h', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face', hasUnseenStory: true },
     { id: 3, username: 'layla_noor', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face', hasUnseenStory: true },

@@ -44,8 +44,12 @@ export class Login {
       await this.accountService.Login(this.loginModel()).subscribe({
         next: (res) => {
           if (res.isSuccess) {
+            console.log('res',res);
+            
             this.isLoading.set(false);
             this.cookieService.set('token', res.data.token);
+            this.cookieService.set('userId', res.data.userId);
+            this.cookieService.set('profilePicture', res.data.profilePicture);
             this.router.navigate(['/home']);
           }
         }, error: (err) => {

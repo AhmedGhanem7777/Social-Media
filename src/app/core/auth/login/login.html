@@ -12,7 +12,7 @@
 
     <!-- Theme & Language toggles — Button: variant="ghost" size="icon" -->
     <div class="absolute top-4 right-4 flex gap-2 z-10">
-        <button type="button" (click)="themeService.toggleTheme()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+        <button type="button" (click)="themeService.toggleTheme()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium cursor-pointer
                  ring-offset-background transition-all duration-300
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                  disabled:pointer-events-none disabled:opacity-50
@@ -33,7 +33,7 @@
             }
         </button>
 
-        <button type="button" (click)="toggleLanguage()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+        <button type="button" (click)="toggleLanguage()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium cursor-pointer
                  ring-offset-background transition-all duration-300
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                  disabled:pointer-events-none disabled:opacity-50
@@ -145,7 +145,7 @@
                            h-12 text-base px-5
                            pl-10 rtl:pl-5 rtl:pr-10" />
                             <!-- Button: variant="ghost" size="iconSm" — absolute right-2 rtl:right-auto rtl:left-2 -->
-                            <button type="button" (click)="toggleShowPassword()" class="absolute right-2 rtl:right-auto rtl:left-2 top-1/2 -translate-y-1/2
+                            <button type="button" (click)="toggleShowPassword()" class="absolute right-2 rtl:right-auto rtl:left-2 top-1/2 -translate-y-1/2 cursor-pointer
                            inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
                            text-sm font-medium ring-offset-background transition-all duration-300
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
@@ -183,7 +183,7 @@
                     </div>
 
                     <!-- Submit — Button: variant="gradient" size="xl" -->
-                    <button type="submit" [disabled]="isLoading()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap
+                    <button type="submit" [disabled]="isLoading()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer
                        w-full h-14 rounded-xl px-10 text-lg font-semibold
                        ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
@@ -225,7 +225,7 @@
                 <div class="flex gap-3 w-full">
                     <!-- Google -->
                     <button type="button" aria-label="Continue with Google" class="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap
-                       h-10 px-4 py-2 rounded-lg text-sm font-medium
+                       h-10 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer
                        ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50
@@ -245,7 +245,7 @@
 
                     <!-- Facebook -->
                     <button type="button" aria-label="Continue with Facebook" class="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap
-                       h-10 px-4 py-2 rounded-lg text-sm font-medium
+                       h-10 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer
                        ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50
@@ -259,7 +259,7 @@
 
                     <!-- GitHub -->
                     <button type="button" aria-label="Continue with GitHub" class="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap
-                       h-10 px-4 py-2 rounded-lg text-sm font-medium
+                       h-10 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer
                        ring-offset-background transition-all duration-300
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50
@@ -275,7 +275,7 @@
                 <!-- Register link -->
                 <p class="text-center text-sm text-muted-foreground">
                     {{ languageService.t('auth.noAccount') }}&nbsp;
-                    <a routerLink="/register" class="text-primary hover:underline underline-offset-4 font-medium">
+                    <a routerLink="/register" class="text-primary hover:underline underline-offset-4 font-medium cursor-pointer">
                         {{ languageService.t('auth.register') }}
                     </a>
                 </p>

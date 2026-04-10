@@ -4,7 +4,7 @@
         @for (item of navItems; track item.path) {
         @if (item.isCreate) {
         <!-- Create button — gradient circle -->
-        <a [routerLink]="item.path" class="flex flex-col items-center justify-center">
+        <a [routerLink]="item.path" class="flex flex-col items-center justify-center cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center
                           shadow-glow -mt-4 hover:scale-110 active:scale-95 transition-transform">
                 <!-- PlusCircle icon -->
@@ -17,8 +17,8 @@
             </div>
         </a>
         } @else {
-        <a [routerLink]="item.path"
-            class="flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all duration-200"
+        <a [routerLink]="getLink(item)"
+            class="flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all duration-200 cursor-pointer"
             [class]="isActive(item.path) ? 'text-primary' : 'text-muted-foreground hover:text-foreground'">
             <div class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-transform"

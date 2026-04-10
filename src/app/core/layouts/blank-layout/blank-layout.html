@@ -1,11 +1,8 @@
 <div class="min-h-screen bg-background">
     <app-navbar />
 
-    <div class="flex pt-16">
-        @if (showSidebar()) {
-        <app-sidebar />
-        }
-        <main class="flex-1 min-h-[calc(100vh-4rem)] pb-20 lg:pb-6" [class.lg:ms-64]="showSidebar()">
+    <div class="pt-16">
+        <main class="min-h-[calc(100vh-4rem)] pb-20 lg:pb-6">
             <router-outlet></router-outlet>
         </main>
     </div>

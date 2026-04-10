@@ -10,10 +10,13 @@ import { Pagination } from '../../models/Pagination';
 })
 export class Friend {
   private readonly httpClient = inject(HttpClient);
-  private readonly cookieService = inject(CookieService);
   private readonly baseUrl = environment.baseUrl;
 
   GetSuggestedUsers(paging: Pagination): Observable<any> {
     return this.httpClient.get(`${this.baseUrl}/api/Friends/suggestions?PageIndex=${paging.pageIndex}&PageSize=${paging.pageSize}`);
+  }
+
+  GetFriends(paging: Pagination): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}/api/Friends?PageIndex=${paging.pageIndex}&PageSize=${paging.pageSize}`)
   }
 }

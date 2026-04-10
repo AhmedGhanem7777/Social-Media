@@ -8,7 +8,17 @@
                 <div class="rounded-full p-[3px] transition-transform duration-300 group-hover:scale-105"
                     [class]="storyRingClass(story)">
                     <div class="rounded-full bg-background p-[2px]">
+                        @if (story.avatar) {
                         <img [src]="story.avatar" [alt]="story.username" class="w-16 h-16 rounded-full object-cover" />
+                        } @else {
+                        <div class="w-16 h-16 rounded-full text-muted-foreground flex items-center justify-center p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </div>
+                        }
                     </div>
                 </div>
 

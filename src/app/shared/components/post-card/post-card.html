@@ -4,21 +4,33 @@
     <!-- CardHeader: flex flex-row items-center justify-between p-4 -->
     <div class="flex flex-row items-center justify-between p-4">
         <div class="flex items-center gap-3">
-            <!-- Avatar w-11 h-11 -->
+            <!-- Avatar -->
             <div
                 class="w-11 h-11 rounded-full ring-2 ring-primary/20 hover:ring-primary/50 transition-all cursor-pointer overflow-hidden flex-shrink-0">
-                <img [src]="user().avatar" [alt]="user().name" class="w-full h-full object-cover" />
+                <img [src]="post().isShared ? post().sharedByProfilePicture : post().profilePicture"
+                    [alt]="post().isShared ? post().sharedByDisplayName : post().displayName"
+                    class="w-full h-full object-cover" />
             </div>
             <div>
-                <p class="font-semibold text-sm hover:underline cursor-pointer">{{ user().name }}</p>
-                <p class="text-xs text-muted-foreground">&#64;{{ user().username }} · {{ timeAgo() }}</p>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <p class="font-semibold text-sm hover:underline cursor-pointer">
+                        {{ post().isShared ? post().sharedByDisplayName : post().displayName }}
+                    </p>
+                    @if (post().isShared) {
+                    <span class="text-xs text-muted-foreground">{{ lang.t('feed.sharedAPost') }}</span>
+                    }
+                </div>
+                <p class="text-xs text-muted-foreground">
+                    &#64;{{ post().isShared ? post().sharedByDisplayName : post().userName }} · {{ (post().isShared ?
+                    post().sharedAt : post().createdAt ) | postDate }}
+                </p>
             </div>
         </div>
 
-        <!-- MoreHorizontal dropdown — Button variant="ghost" size="iconSm" -->
+        <!-- MoreHorizontal dropdown -->
         <div class="relative">
             <button type="button" (click)="toggleMoreMenu()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
-                   ring-offset-background transition-all duration-300
+                   ring-offset-background transition-all duration-300 cursor-pointer
                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                    disabled:pointer-events-none disabled:opacity-50
                    hover:bg-accent hover:text-accent-foreground active:scale-[0.98] h-8 w-8">
@@ -31,44 +43,73 @@
             </button>
 
             @if (showMoreMenu()) {
-            <!-- Backdrop -->
-            <div class="fixed inset-0 z-40" (click)="closeMoreMenu()"></div>
-            <!-- DropdownMenuContent align="end" -->
+            <div class="fixed inset-0 z-40 cursor-pointer" (click)="closeMoreMenu()"></div>
             <div
                 class="absolute end-0 mt-1 w-40 rounded-lg bg-popover border border-border shadow-soft z-50 overflow-hidden animate-scale-in py-1">
                 <button type="button" (click)="closeMoreMenu()"
-                    class="w-full text-start px-3 py-2 text-sm hover:bg-accent transition-colors">
-                    Save post
-                </button>
+                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Save
+                    post</button>
                 <button type="button" (click)="closeMoreMenu()"
-                    class="w-full text-start px-3 py-2 text-sm hover:bg-accent transition-colors">
-                    Hide post
-                </button>
+                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Hide
+                    post</button>
                 <button type="button" (click)="closeMoreMenu()"
-                    class="w-full text-start px-3 py-2 text-sm hover:bg-accent transition-colors text-destructive">
-                    Report
-                </button>
+                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors text-destructive">Report</button>
             </div>
             }
         </div>
     </div>
 
-    <!-- CardContent: px-4 pb-3 -->
+    <!-- Sharer's Caption / Normal Post Content -->
     <div class="px-4 pb-3">
-        <p class="text-sm leading-relaxed whitespace-pre-wrap">{{ content() }}</p>
+        <p class="text-sm leading-relaxed whitespace-pre-wrap">{{ post().isShared ? post().sharedCaption :
+            post().content }}</p>
     </div>
 
-    <!-- Post image -->
-    @if (image()) {
+    <!-- ===== Embedded original post (Conditional) ===== -->
+    @if (post().isShared) {
+    <div class="mx-4 mb-3 rounded-xl border border-border overflow-hidden shared-post-embed">
+        <!-- Original post header -->
+        <div class="flex items-center gap-3 p-3 pb-2">
+            <div class="w-9 h-9 rounded-full ring-1 ring-primary/10 overflow-hidden flex-shrink-0 cursor-pointer">
+                <img [src]="post().profilePicture" [alt]="post().displayName" class="w-full h-full object-cover" />
+            </div>
+            <div>
+                <p class="font-semibold text-sm hover:underline cursor-pointer">{{ post().displayName }}</p>
+                <p class="text-xs text-muted-foreground">&#64;{{ post().userName }} · {{ post().createdAt | postDate }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Original post content -->
+        @if (post().content) {
+        <div class="px-3 pb-2">
+            <p class="text-sm leading-relaxed whitespace-pre-wrap">{{ post().content }}</p>
+        </div>
+        }
+
+        <!-- Original post image (if shared) -->
+        @if (post().contentUrl) {
+        <div class="relative group">
+            <img [src]="post().contentUrl" alt="Shared content" class="w-full object-cover max-h-[400px]" />
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+        }
+    </div>
+    } @else {
+    <!-- ===== Normal (non-shared) post image ===== -->
+    @if (post().contentUrl) {
     <div class="relative group">
-        <img [src]="image()" alt="Post content" class="w-full object-cover max-h-[500px]" />
+        <img [src]="post().contentUrl" alt="Post content" class="w-full object-cover max-h-[500px]" />
         <div
             class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
         </div>
     </div>
     }
+    }
 
-    <!-- Stats row — CardContent px-4 py-3 -->
+    <!-- Stats row -->
     <div class="px-4 py-3">
         <div class="flex items-center justify-between text-sm text-muted-foreground">
             <div class="flex items-center gap-1">
@@ -84,37 +125,86 @@
                 </div>
                 <span>{{ likeCount() }}</span>
             </div>
-            <div class="flex gap-4">
-                <span class="hover:underline cursor-pointer">{{ comments() }} {{ lang.t('feed.comment') }}s</span>
-                <span class="hover:underline cursor-pointer">{{ shares() }} {{ lang.t('feed.share') }}s</span>
+            <div class="flex gap-4 items-center">
+                <!-- Facepile (Commenters) -->
+                @if (userCommented().length > 0) {
+                <div class="flex -space-x-2 mr-1">
+                    @for (user of userCommented().slice(0, 3); track user.userId) {
+                    <div class="w-6 h-6 rounded-full border-2 border-card overflow-hidden transition-transform hover:scale-110 cursor-pointer"
+                        [title]="user.displayName">
+                        @if (user.profilePicture) {
+                        <img [src]="user.profilePicture" class="w-full h-full object-cover" />
+                        } @else {
+                        <div class="w-full h-full bg-muted flex items-center justify-center p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="w-full h-full text-muted-foreground">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+                <a (click)="getUsersWhoCommented(); toggleUserCommentedModal()"
+                    class="hover:underline cursor-pointer flex items-center gap-1.5">
+                    <span>{{ commentsCount() }}</span>
+                    <span>{{ lang.t('feed.comment') }}s</span>
+                </a>
+                <a>{{ sharesCount() }} {{ lang.t('feed.share') }}s</a>
             </div>
         </div>
     </div>
 
-    <!-- CardFooter: px-4 py-2 border-t flex-col gap-3 -->
+    <!-- CardFooter -->
     <div class="px-4 py-2 border-t border-border flex flex-col gap-3">
         <div class="flex items-center justify-between w-full">
             <div class="flex items-center gap-1">
+                <!-- Like Button Container -->
+                <div class="relative flex-1" (mouseenter)="showReactions.set(true)"
+                    (mouseleave)="showReactions.set(false)">
+                    <!-- Reactions Menu wrapper with bridge -->
+                    @if (showReactions()) {
+                    <div class="absolute bottom-full left-0 z-50 pb-3 -ml-4">
+                        <div
+                            class="bg-card border border-border rounded-full shadow-lg flex gap-1 p-1 animate-scale-in glass">
+                            @for (reaction of enumService.reactionTypes(); track reaction.id) {
+                            <button type="button" (click)="selectReaction(reaction.id)"
+                                class="w-10 h-10 flex items-center justify-center text-2xl hover:scale-125 transition-transform duration-200 cursor-pointer">
+                                {{ reaction.emoji }}
+                            </button>
+                            }
+                        </div>
+                    </div>
+                    }
 
-                <!-- Like — Button variant="ghost" + conditional text-red-500 -->
-                <button type="button" (click)="handleLike()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
-                     ring-offset-background transition-all duration-300
-                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                     disabled:pointer-events-none disabled:opacity-50
-                     hover:bg-accent hover:text-accent-foreground active:scale-[0.98]
-                     px-4 py-2 h-10 flex-1" [class.text-red-500]="isLiked()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-all"
-                        [class.fill-current]="isLiked()" [class.like-burst]="isLiked()" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path
-                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                    </svg>
-                    <span class="hidden sm:inline">{{ lang.t('feed.like') }}</span>
-                </button>
+                    <button type="button" (click)="handleLike()" class="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+                         ring-offset-background transition-all duration-300 cursor-pointer
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                         disabled:pointer-events-none disabled:opacity-50
+                         hover:bg-accent hover:text-accent-foreground active:scale-[0.98]
+                         px-4 py-2 h-10" [class]="getReactionById(selectedReaction())?.color ?? 'text-foreground'">
+                        @if (selectedReaction()) {
+                        <span class="text-xl animate-bounce-subtle">{{ getReactionById(selectedReaction())?.emoji
+                            }}</span>
+                        <span class="hidden sm:inline font-bold">{{ getReactionById(selectedReaction())?.name }}</span>
+                        } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-all" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z" />
+                        </svg>
+                        <span class="hidden sm:inline">{{ lang.t('feed.like') }}</span>
+                        }
+                    </button>
+                </div>
 
-                <!-- Comment — Button variant="ghost" -->
+                <!-- Comment Button -->
                 <button type="button" (click)="toggleComments()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
-                     ring-offset-background transition-all duration-300
+                     ring-offset-background transition-all duration-300 cursor-pointer
                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                      disabled:pointer-events-none disabled:opacity-50
                      hover:bg-accent hover:text-accent-foreground active:scale-[0.98]
@@ -127,9 +217,9 @@
                     <span class="hidden sm:inline">{{ lang.t('feed.comment') }}</span>
                 </button>
 
-                <!-- Share — Button variant="ghost" -->
-                <button type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
-                     ring-offset-background transition-all duration-300
+                <!-- Share Button -->
+                <button (click)="showShareModal.set(true)" type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+                     ring-offset-background transition-all duration-300 cursor-pointer
                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                      disabled:pointer-events-none disabled:opacity-50
                      hover:bg-accent hover:text-accent-foreground active:scale-[0.98]
@@ -147,9 +237,9 @@
                 </button>
             </div>
 
-            <!-- Bookmark — Button variant="ghost" size="icon" -->
+            <!-- Bookmark Button -->
             <button type="button" (click)="toggleSaved()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
-                   ring-offset-background transition-all duration-300
+                   ring-offset-background transition-all duration-300 cursor-pointer
                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                    disabled:pointer-events-none disabled:opacity-50
                    hover:bg-accent hover:text-accent-foreground active:scale-[0.98] h-10 w-10"
@@ -164,35 +254,18 @@
 
         <!-- Comment input row -->
         @if (showComments()) {
-        <div class="w-full flex items-center gap-2 pt-2 animate-fade-in">
-            <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-                    alt="You" class="w-full h-full object-cover" />
-            </div>
-            <div class="flex-1 relative">
-                <!-- Input variant="filled" inputSize="sm" rounded-full pr-10 -->
-                <input type="text" placeholder="Write a comment..." class="flex w-full rounded-full border ring-offset-background transition-all duration-300
-                       placeholder:text-muted-foreground focus-visible:outline-none
-                       disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
-                       border-transparent bg-secondary
-                       focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary
-                       h-9 text-sm px-3 pr-10 rtl:pr-3 rtl:pl-10" />
-                <!-- Send button — Button variant="ghost" size="iconSm" absolute -->
-                <button type="button" class="absolute right-1 rtl:right-auto rtl:left-1 top-1/2 -translate-y-1/2
-                       inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
-                       text-sm font-medium ring-offset-background transition-all duration-300
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                       disabled:pointer-events-none disabled:opacity-50
-                       hover:bg-accent hover:text-accent-foreground active:scale-[0.98] h-8 w-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none shrink-0"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="m22 2-7 20-4-9-9-4Z" />
-                        <path d="M22 2 11 13" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+        <app-comments [contentType]="1" [postId]="post().id"
+            (commentCountChange)="commentsCount.set($event)"></app-comments>
         }
     </div>
 </div>
+
+@if (showShareModal()) {
+<app-share-post-modal [post]="post()" (close)="showShareModal.set(false)"
+    (share)="sharePost($event)"></app-share-post-modal>
+}
+
+@if (showUserCommentedModal()) {
+<app-user-list-modal [users]="userCommented()" title="Users who commented"
+    (close)="showUserCommentedModal.set(false)"></app-user-list-modal>
+}

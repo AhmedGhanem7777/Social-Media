@@ -6,6 +6,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { CookieService } from 'ngx-cookie-service';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { headersInterceptor } from './core/interceptors/headers-interceptor';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -18,6 +19,6 @@ export const appConfig: ApplicationConfig = {
       // , withHashLocation()
     ),
     importProvidersFrom(CookieService, NgxSpinnerModule),
-    provideHttpClient(withFetch(), withInterceptors([headersInterceptor, loadingInterceptor]))
+    provideHttpClient(withFetch(), withInterceptors([headersInterceptor, authInterceptor, loadingInterceptor]))
   ]
 };

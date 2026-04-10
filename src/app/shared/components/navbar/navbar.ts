@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, signal } from '@angular/core';
+import { Component, inject, input, InputSignal, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../../core/services/Theme/theme-service';
 import { LanguageService } from '../../../core/services/Language/language-service';
@@ -12,7 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
+export class Navbar implements OnInit {
   readonly lang = inject(LanguageService);
   readonly theme = inject(ThemeService);
   private readonly router = inject(Router);
@@ -20,6 +20,9 @@ export class Navbar {
   private readonly cookieService = inject(CookieService);
 
   showProfileMenu = signal(false);
+  showMobileMenu = signal(false);
+  currentUserId = signal<string>('');
+  profilePicture = signal<string>('');
 
   readonly navItems: NavItem[] = [
     { path: '/', icon: 'home', label: 'nav.home' },
@@ -27,9 +30,26 @@ export class Navbar {
     { path: '/chat', icon: 'message', label: 'nav.chat' },
   ];
 
+  ngOnInit(): void {
+    console.log(this.profilePicture());
+
+    this.profilePicture.set(this.cookieService.get("profilePicture"));
+    this.currentUserId.set(this.cookieService.get("userId"))
+  }
+
   // Method to handle user logout
   LogOut(): void {
     this.showProfileMenu.set(false);
+    this.accountService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Even if revoke fails, clear local auth data and redirect
+        this.accountService.clearAuthData();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   // Method to check if a nav item is active based on the current route
@@ -45,6 +65,14 @@ export class Navbar {
   // Method to toggle the theme of the application
   toggleProfileMenu(): void {
     this.showProfileMenu.update(v => !v);
+  }
+
+  toggleMobileMenu(): void {
+    this.showMobileMenu.update(v => !v);
+  }
+
+  closeMobileMenu(): void {
+    this.showMobileMenu.set(false);
   }
 
   closeProfileMenu(): void {
