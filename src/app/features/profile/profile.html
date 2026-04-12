@@ -46,7 +46,8 @@
                     <div class="w-full h-full rounded-full bg-background p-1">
                         <div class="w-full h-full rounded-full overflow-hidden">
                             @if (profileData()?.profilePicture) {
-                            <img [src]="profileData()?.profilePicture" alt="Profile" class="w-full h-full object-cover" />
+                            <img [src]="profileData()?.profilePicture" alt="Profile"
+                                class="w-full h-full object-cover" />
                             } @else {
                             <div class="w-full h-full bg-muted flex items-center justify-center text-muted-foreground p-6
                                         ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
@@ -176,8 +177,9 @@
                 </svg>
                 }
                 @case ('saved') {
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
                 </svg>
                 }
@@ -203,7 +205,7 @@
         <div class="max-w-2xl mx-auto space-y-6 mt-6">
             @for (post of profilePosts(); track post.id; let i = $index) {
             <div class="animate-fade-in-up" [style.animation-delay]="i * 100 + 'ms'">
-                <app-post-card [post]="post" />
+                <app-post-card [post]="post" (postDeleted)="getUserPosts(); getProfileData()" />
             </div>
             }
         </div>
@@ -216,8 +218,8 @@
             <!-- @for (post of savedPosts(); track post.id; let i = $index) { -->
             <div class="aspect-square relative group cursor-pointer overflow-hidden animate-scale-in"
                 [style.animation-delay]="i * 50 + 'ms'">
-                <!-- <img [src]="post.image" alt=""
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" /> -->
+                <img [src]="post.contentUrl" alt=""
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity
                               flex items-center justify-center">
                     <!-- Bookmark filled -->
@@ -248,7 +250,8 @@
                             <img [src]="friend.profilePicture" [alt]="friend.displayName"
                                 class="w-full h-full object-cover" />
                             } @else {
-                            <div class="w-full h-full bg-muted flex items-center justify-center text-muted-foreground p-3">
+                            <div
+                                class="w-full h-full bg-muted flex items-center justify-center text-muted-foreground p-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">

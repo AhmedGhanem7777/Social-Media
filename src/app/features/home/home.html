@@ -14,11 +14,10 @@
             <app-create-post-card />
         </div>
 
-        <!-- Posts feed -->
         <div class="space-y-6">
-            @for (post of posts; track post.id; let i = $index) {
+            @for (post of posts(); track post.id; let i = $index) {
             <div class="animate-fade-in-up" [style.animation-delay]="i * 100 + 'ms'">
-                <app-post-card [post]="post" />
+                <app-post-card [post]="post" (postDeleted)="onPostDeleted($event)" />
             </div>
             }
         </div>

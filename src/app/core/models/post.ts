@@ -6,27 +6,36 @@ export interface SharedPost {
 }
 
 export interface Post {
-    commentsCount: number;
+    id: number;
     content: string;
     contentUrl: string;
+
     createdAt: string;
-    displayName: string;
-    id: number;
-    isLikedByCurrentUser: boolean;
-    isShared: boolean;
-    isViewedByCurrentUser: boolean;
+
+    commentsCount: number;
     likesCount: number;
-    profilePicture: string;
-    sharedAt: string;
-    sharedByDisplayName: string;
-    sharedByProfilePicture: string;
-    sharedByUserId: string;
-    sharedCaption: string;
+    savesCount: number;
     sharesCount: number;
+
+    isLikedByCurrentUser: boolean;
+    isSavedByCurrentUser: boolean;
+    isViewedByCurrentUser: boolean;
+
+    reactionType: string | null;
+    reactions: ReactionSummary[]
+
     userId: string;
     userName: string;
-    isSaved?: boolean;
-    selectedReaction?: number;
+    displayName: string;
+    profilePicture: string;
+
+    isShared: boolean;
+
+    sharedAt?: string;
+    sharedByUserId?: string;
+    sharedByDisplayName?: string;
+    sharedByProfilePicture?: string;
+    sharedCaption?: string;
 }
 
 export interface PostData {
@@ -38,4 +47,9 @@ export interface PostData {
 export interface PostShareData {
     content: string;
     postId: number
+}
+
+export interface ReactionSummary {
+    reactionType: string;
+    count: number;
 }

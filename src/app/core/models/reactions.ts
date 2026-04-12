@@ -13,3 +13,17 @@ export const REACTIONS: Reaction[] = [
     { id: 5, name: 'Sad', emoji: '😢', color: 'text-blue-400' },
     { id: 6, name: 'Angry', emoji: '😡', color: 'text-orange-600' }
 ];
+
+export interface UserReactionView {
+    userId: string;
+    displayName: string;
+    profilePicture: string;
+    reactionType: string;
+}
+
+export interface UserReactionRequest {
+    contentType: number;
+    contentId: number;
+    pageIndex: number;
+    pageSize: number;
+}

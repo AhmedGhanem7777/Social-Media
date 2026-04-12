@@ -13,6 +13,8 @@ import { Friend } from '../../core/services/Friend/friend';
 import { FriendData } from '../../core/models/friend';
 import { ActivatedRoute } from '@angular/router';
 import { PostCard } from '../../shared/components/post-card/post-card';
+import { Save } from '../../core/services/SaveItem/save';
+import { SaveRequest } from '../../core/models/save';
 
 @Component({
   selector: 'app-profile',
@@ -28,6 +30,7 @@ export class Profile implements OnInit {
   readonly postService = inject(PostService);
   readonly friendService = inject(Friend);
   readonly activatedRoute = inject(ActivatedRoute);
+  readonly saveService = inject(Save);
 
   activeTab = signal<Tab>('posts');
   userId = signal<string>('');
@@ -41,9 +44,6 @@ export class Profile implements OnInit {
   ngOnInit(): void {
     this.getUserId()
     this.getSocialPlateforms()
-    this.getProfileData();
-    this.getUserPosts();
-    this.getFrindsForSpecificUser();
   }
 
   getUserId() {
@@ -51,6 +51,15 @@ export class Profile implements OnInit {
       const id = param.get('id');
       if (id) {
         this.userId.set(id);
+        console.log("userrrrrrrrrrID", this.userId());
+
+        // Fetch data for the new user
+        this.getProfileData();
+        this.getUserPosts();
+        this.getFrindsForSpecificUser();
+
+        // Test for saved items (you can remove this if not needed)
+        this.getSaveItemsForSpecificUser(1);
       }
     });
   }
@@ -81,7 +90,7 @@ export class Profile implements OnInit {
   }
 
   getUserPosts(): void {
-    this.postService.GetPostsForSpecificUser({ pageIndex: 1, pageSize: 1, userId: this.userId() }).subscribe({
+    this.postService.GetPostsForSpecificUser({ pageIndex: 1, pageSize: 3, userId: this.userId() }).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           this.profilePosts.set(res.data.data);
@@ -101,6 +110,22 @@ export class Profile implements OnInit {
       }, error: (err) => {
         console.log(err);
 
+      }
+    })
+  }
+
+  
+
+  getSaveItemsForSpecificUser(contentType: number): void {
+    this.saveService.GetSaveItems(contentType).subscribe({
+      next: (res) => {
+        if (contentType === 1) {
+          console.log("Save Item", res);
+
+          this.savedPosts.set(res.data.data);
+        }
+      }, error: (err) => {
+        console.log(err);
       }
     })
   }

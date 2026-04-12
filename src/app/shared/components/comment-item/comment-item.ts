@@ -7,6 +7,7 @@ import { REACTIONS } from '../../../core/models/reactions';
 import { Comment as CommentService } from '../../../core/services/Comment/comment';
 import { CommentInput } from '../comment-input/comment-input';
 import { Enum } from '../../../core/services/Enum/enum';
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-comment-item',
@@ -18,6 +19,7 @@ export class CommentItem implements OnInit {
   readonly lang = inject(LanguageService);
   readonly commentService = inject(CommentService);
   readonly enumService = inject(Enum);
+  readonly router = inject(Router);
   readonly REACTIONS = REACTIONS;
 
   readonly comment = input.required<Comment>();
@@ -79,6 +81,12 @@ export class CommentItem implements OnInit {
 
       }
     })
+  }
+
+  navigateToProfile(userId: string): void {
+    if (userId) {
+      this.router.navigate(['/profile', userId]);
+    }
   }
 
   toggleReplies(): void {

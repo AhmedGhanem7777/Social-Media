@@ -46,14 +46,20 @@
             <div class="fixed inset-0 z-40 cursor-pointer" (click)="closeMoreMenu()"></div>
             <div
                 class="absolute end-0 mt-1 w-40 rounded-lg bg-popover border border-border shadow-soft z-50 overflow-hidden animate-scale-in py-1">
-                <button type="button" (click)="closeMoreMenu()"
+                <button type="button" (click)="closeMoreMenu(); toggleSave(post().id)"
                     class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Save
                     post</button>
                 <button type="button" (click)="closeMoreMenu()"
                     class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Hide
                     post</button>
+                @if (isOwner()) {
+                <button type="button" (click)="handleDelete()"
+                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors text-destructive">Delete
+                    post</button>
+                } @else {
                 <button type="button" (click)="closeMoreMenu()"
                     class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors text-destructive">Report</button>
+                }
             </div>
             }
         </div>
@@ -112,18 +118,16 @@
     <!-- Stats row -->
     <div class="px-4 py-3">
         <div class="flex items-center justify-between text-sm text-muted-foreground">
-            <div class="flex items-center gap-1">
-                <div class="flex -space-x-1">
-                    <div class="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-white fill-white"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path
-                                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                        </svg>
-                    </div>
+            <div class="flex items-center gap-1 cursor-pointer hover:underline" (click)="toggleUserReactionsModal()">
+                <div class="flex -space-x-1.5 items-center mr-1">
+                    @for (reaction of reactions(); track reaction.reactionType) {
+                    <span class="text-base leading-none drop-shadow-sm">{{ getEmojiForReaction(reaction.reactionType)
+                        }}</span>
+                    }
                 </div>
+                @if(likeCount() > 0) {
                 <span>{{ likeCount() }}</span>
+                }
             </div>
             <div class="flex gap-4 items-center">
                 <!-- Facepile (Commenters) -->
@@ -151,9 +155,10 @@
                 <a (click)="getUsersWhoCommented(); toggleUserCommentedModal()"
                     class="hover:underline cursor-pointer flex items-center gap-1.5">
                     <span>{{ commentsCount() }}</span>
-                    <span>{{ lang.t('feed.comment') }}s</span>
+                    <span>{{ lang.t('feed.comment') }}</span>
                 </a>
-                <a>{{ sharesCount() }} {{ lang.t('feed.share') }}s</a>
+                <a>{{ sharesCount() }} {{ lang.t('feed.share') }}</a>
+                <a>{{ savesCount() }} {{ lang.t('feed.save') }}</a>
             </div>
         </div>
     </div>
@@ -185,7 +190,7 @@
                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                          disabled:pointer-events-none disabled:opacity-50
                          hover:bg-accent hover:text-accent-foreground active:scale-[0.98]
-                         px-4 py-2 h-10" [class]="getReactionById(selectedReaction())?.color ?? 'text-foreground'">
+                         px-4 py-2 h-10" [ngClass]="getReactionById(selectedReaction())?.color ?? 'text-foreground'">
                         @if (selectedReaction()) {
                         <span class="text-xl animate-bounce-subtle">{{ getReactionById(selectedReaction())?.emoji
                             }}</span>
@@ -238,12 +243,12 @@
             </div>
 
             <!-- Bookmark Button -->
-            <button type="button" (click)="toggleSaved()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+            <button type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
                    ring-offset-background transition-all duration-300 cursor-pointer
                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                    disabled:pointer-events-none disabled:opacity-50
                    hover:bg-accent hover:text-accent-foreground active:scale-[0.98] h-10 w-10"
-                [class.text-primary]="isSaved()">
+                [class.text-primary]="isSaved()" (click)="toggleSave(post().id)">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" [class.fill-current]="isSaved()"
                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -268,4 +273,9 @@
 @if (showUserCommentedModal()) {
 <app-user-list-modal [users]="userCommented()" title="Users who commented"
     (close)="showUserCommentedModal.set(false)"></app-user-list-modal>
+}
+
+@if (showUserReactionsModal()) {
+<app-reactions-modal [contentId]="post().id"
+    (close)="showUserReactionsModal.set(false)"></app-reactions-modal>
 }

@@ -18,4 +18,8 @@ export class Post {
   SharePost(postData: PostShareData): Observable<any> {
     return this.httpClient.post(`${this.baseUrl}/api/Post/share`, postData);
   }
+  
+  DeletePost(postId: number): Observable<any> {
+    return this.httpClient.delete(`${this.baseUrl}/api/Post/${postId}`);
+  }
 }
