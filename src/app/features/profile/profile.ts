@@ -38,7 +38,6 @@ export class Profile implements OnInit {
   profileData = signal<UserProfile | null>(null)
   plateforms = signal<Platform[]>([])
   profilePosts = signal<Post[]>([])
-  savedPosts = signal<Post[]>([])
   friends = signal<FriendData[]>([])
 
   ngOnInit(): void {
@@ -57,9 +56,6 @@ export class Profile implements OnInit {
         this.getProfileData();
         this.getUserPosts();
         this.getFrindsForSpecificUser();
-
-        // Test for saved items (you can remove this if not needed)
-        this.getSaveItemsForSpecificUser(1);
       }
     });
   }
@@ -90,7 +86,7 @@ export class Profile implements OnInit {
   }
 
   getUserPosts(): void {
-    this.postService.GetPostsForSpecificUser({ pageIndex: 1, pageSize: 3, userId: this.userId() }).subscribe({
+    this.postService.GetPostsForSpecificUser({ pageIndex: 1, pageSize: 10, userId: this.userId() }).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           this.profilePosts.set(res.data.data);
@@ -114,22 +110,6 @@ export class Profile implements OnInit {
     })
   }
 
-  
-
-  getSaveItemsForSpecificUser(contentType: number): void {
-    this.saveService.GetSaveItems(contentType).subscribe({
-      next: (res) => {
-        if (contentType === 1) {
-          console.log("Save Item", res);
-
-          this.savedPosts.set(res.data.data);
-        }
-      }, error: (err) => {
-        console.log(err);
-      }
-    })
-  }
-
   readonly stats = computed(() => [
     { label: this.lang.t('profile.posts'), value: this.profileData()?.postsCount },
     { label: this.lang.t('profile.followers'), value: this.profileData()?.followersCount },
@@ -138,7 +118,6 @@ export class Profile implements OnInit {
 
   readonly tabs = computed(() => [
     { id: 'posts' as Tab, label: this.lang.t('profile.posts') },
-    { id: 'saved' as Tab, label: this.lang.t('nav.saved') },
     { id: 'friends' as Tab, label: this.lang.t('profile.friends') },
   ]);
 }

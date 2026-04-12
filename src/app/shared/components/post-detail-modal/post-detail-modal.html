@@ -1,0 +1,95 @@
+<div class="backdrop fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 sm:p-6"
+    (click)="onBackdropClick($event)">
+
+    <div
+        class="relative w-full max-w-4xl max-h-[90vh] flex flex-col items-center animate-in fade-in zoom-in duration-300">
+
+        <!-- Close Button -->
+        <button type="button" (click)="onClose()"
+            class="cursor-pointer absolute -top-12 right-0 sm:-right-12 p-2 text-white/70 hover:text-white transition-colors focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Content Container -->
+        <div class="w-full rounded-2xl shadow-2xl overflow-y-auto scrollbar-hide min-h-[300px] flex flex-col">
+            @if (item()) {
+            @if (type() === 'post') {
+            <div class="max-w-2xl mx-auto py-4 w-full">
+                <app-post-card [post]="item()!"></app-post-card>
+            </div>
+            } @else if (type() === 'reel') {
+            <!-- Reel Player Implementation -->
+            <div
+                class="relative aspect-[9/16] max-h-[85vh] mx-auto bg-black rounded-xl overflow-hidden shadow-2xl group">
+                <!-- Fake Video Image -->
+                <img [src]="item()!.contentUrl" alt="Reel content" class="w-full h-full object-cover">
+
+                <!-- Gradient Overlays -->
+                <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
+
+                <!-- Center Play Icon (static for now) -->
+                <div
+                    class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div
+                        class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 fill-current ms-1" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Bottom Info -->
+                <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-lg">
+                            <img [src]="item()!.profilePicture" [alt]="item()!.displayName"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-sm drop-shadow-md">{{ item()!.displayName }}</span>
+                            <span class="text-[10px] text-white/80 drop-shadow-md">{{ lang.t('saved.originalAudio')
+                                }}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs line-clamp-2 mb-2 opacity-90 drop-shadow-md">{{ item()!.content ||
+                        lang.t('saved.noDescription') }}</p>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="absolute right-3 bottom-20 flex flex-col gap-5 text-white">
+                    <div class="flex flex-col items-center gap-1">
+                        <div
+                            class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-red-500 text-red-500"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold">{{ item()!.likesCount }}</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <div
+                            class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold">{{ item()!.commentsCount }}</span>
+                    </div>
+                </div>
+            </div>
+            }
+            } @else {
+            <div class="flex-1 flex flex-col items-center justify-center gap-3 py-10">
+                <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                <p class="text-sm text-muted-foreground animate-pulse">{{ lang.t('common.loading') }}</p>
+            </div>
+            }
+        </div>
+    </div>
+</div>

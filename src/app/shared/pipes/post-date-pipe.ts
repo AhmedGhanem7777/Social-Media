@@ -7,14 +7,36 @@ import { LanguageService } from '../../core/services/Language/language-service';
 })
 export class PostDatePipe implements PipeTransform {
   private lang = inject(LanguageService);
+  
+  // Cache for Intl formatters to avoid the high overhead of re-creating them
+  private static formatters = new Map<string, Intl.DateTimeFormat>();
 
   transform(value: string | Date | undefined | null): string {
     if (!value) return '';
 
-    const date = new Date(value);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    // Standardize input date string/object
+    let date: Date;
+    if (value instanceof Date) {
+      date = value;
+    } else {
+      let dateStr = String(value);
+      
+      // ROOT CAUSE FIX: Handle UTC and non-UTC dates correctly
+      // If no timezone info, treat as UTC (standard for backend responses) to avoid local shift
+      if (!dateStr.includes('Z') && !/[+-]\d{2}(:?\d{2})?$/.test(dateStr)) {
+        dateStr = dateStr.includes('T') ? `${dateStr}Z` : `${dateStr.replace(' ', 'T')}Z`;
+      }
+      date = new Date(dateStr);
+    }
 
+    const timestamp = date.getTime();
+    if (isNaN(timestamp)) return ''; // Robustness check for invalid dates
+
+    // PERFORMANCE: Use Date.now() to avoid creating another Date object
+    const now = Date.now();
+    const diffInSeconds = Math.floor((now - timestamp) / 1000);
+
+    // Relative time calculation (now, minutes, hours, days)
     if (diffInSeconds < 60) {
       return this.lang.t('time.now');
     }
@@ -34,11 +56,37 @@ export class PostDatePipe implements PipeTransform {
       return `${diffInDays}${this.lang.t('time.day')}`;
     }
 
-    // Longer than 7 days, return formatted date
-    return date.toLocaleDateString(this.lang.language(), {
+    // ROOT CAUSE FIX: Absolute date formatting must always be in Egypt timezone
+    return this.formatAbsoluteDate(date, now);
+  }
+
+  private formatAbsoluteDate(date: Date, now: number): string {
+    const locale = this.lang.language();
+    
+    // We compare years in Egypt timezone to be 100% accurate
+    const yearFormatter = this.getFormatter(locale, { year: 'numeric', timeZone: 'Africa/Cairo' });
+    const targetYear = yearFormatter.format(date);
+    const currentYear = yearFormatter.format(new Date(now));
+
+    const options: Intl.DateTimeFormatOptions = {
       month: 'short',
       day: 'numeric',
-      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-    });
+      timeZone: 'Africa/Cairo'
+    };
+
+    // If different year, include it in the output
+    if (targetYear !== currentYear) {
+      options.year = 'numeric';
+    }
+
+    return this.getFormatter(locale, options).format(date);
+  }
+
+  private getFormatter(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+    const key = `${locale}-${JSON.stringify(options)}`;
+    if (!PostDatePipe.formatters.has(key)) {
+      PostDatePipe.formatters.set(key, new Intl.DateTimeFormat(locale, options));
+    }
+    return PostDatePipe.formatters.get(key)!;
   }
 }

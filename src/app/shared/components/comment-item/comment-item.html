@@ -7,13 +7,12 @@
             @if (comment().profilePicture) {
             <img [src]="comment().profilePicture" [alt]="comment().displayName" class="w-full h-full object-cover" />
             } @else {
-            <div class="w-full h-full bg-accent/50 text-muted-foreground flex items-center justify-center p-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full p-1.5 text-muted-foreground"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
             }
         </div>
     </div>
