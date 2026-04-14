@@ -30,8 +30,11 @@
                 @if(likesCount() > 0){
                 <div
                     class="absolute -bottom-2 -right-1 bg-card border border-border/40 rounded-full px-1 py-0.5 flex items-center gap-0.5 shadow-sm">
-                    <div class="flex -space-x-0.5">
-                        <span class="text-[10px]">{{ getReactionById(selectedReaction() || 1)?.emoji }}</span>
+                    <div class="flex -space-x-1 items-center">
+                        @for (reaction of reactions(); track reaction.reactionType) {
+                        <span class="text-[10px] leading-none drop-shadow-sm">{{ getEmojiForReaction(reaction.reactionType)
+                            }}</span>
+                        }
                     </div>
                     <span class="text-[10px] text-muted-foreground font-medium">{{ likesCount() }}</span>
                 </div>
@@ -65,7 +68,7 @@
             <button (click)="showReplyInput.set(!showReplyInput())"
                 class="hover:underline transition-colors cursor-pointer text-muted-foreground">{{ lang.t('feed.reply')
                 }}</button>
-            <span class="font-normal hover:underline cursor-pointer transition-colors">{{ comment().createdAt | postDate
+            <span class="font-normal cursor-pointer transition-colors">{{ comment().createdAt | postDate
                 }}</span>
         </div>
 

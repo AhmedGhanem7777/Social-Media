@@ -1,3 +1,5 @@
+import { ReactionSummary } from "./post"
+
 // export interface Comment {
 //     id: number;
 //     userId: string;
@@ -23,6 +25,9 @@ export interface Comment {
     profilePicture: string
     repliesCount: number
     userId: string
+
+    reactionType: string | null;
+    reactions: ReactionSummary[];
 
     // just ui
     selectedReaction?: number;

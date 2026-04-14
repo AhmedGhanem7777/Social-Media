@@ -223,7 +223,7 @@
             <div class="p-4">
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     @for (friend of friends(); track friend.userId; let i = $index) {
-                    <div class="flex flex-col items-center gap-2 p-4 rounded-xl
+                    <a (click)="navigateToProfile(friend.userId)" class="flex flex-col items-center gap-2 p-4 rounded-xl
                              hover:bg-accent transition-colors cursor-pointer group animate-fade-in"
                         [style.animation-delay]="i * 50 + 'ms'">
                         <div class="w-16 h-16 rounded-full ring-2 ring-transparent
@@ -244,10 +244,10 @@
                             }
                         </div>
                         <span class="text-sm font-medium text-center">{{ friend.displayName }}</span>
-                    </div>
+                    </a>
                     } @empty {
                     <div
-                        class="col-span-full py-12 flex flex-col items-center justify-center text-muted-foreground bg-card rounded-xl border border-dashed border-border w-full">
+                        class="col-span-full py-12 flex flex-col items-center justify-center text-muted-foreground bg-card rounded-xl w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-3 opacity-20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round">

@@ -7,7 +7,8 @@ import { REACTIONS } from '../../../core/models/reactions';
 import { Comment as CommentService } from '../../../core/services/Comment/comment';
 import { CommentInput } from '../comment-input/comment-input';
 import { Enum } from '../../../core/services/Enum/enum';
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
+import { Like } from '../../../core/services/Like/like';
 
 @Component({
   selector: 'app-comment-item',
@@ -19,6 +20,7 @@ export class CommentItem implements OnInit {
   readonly lang = inject(LanguageService);
   readonly commentService = inject(CommentService);
   readonly enumService = inject(Enum);
+  readonly likeService = inject(Like);
   readonly router = inject(Router);
   readonly REACTIONS = REACTIONS;
 
@@ -28,8 +30,13 @@ export class CommentItem implements OnInit {
   readonly isReply = input<boolean>(false);
 
   isLiked = linkedSignal(() => this.comment().isLikedByCurrentUser);
-  selectedReaction = linkedSignal<number | null>(() => this.comment().selectedReaction ?? (this.comment().isLikedByCurrentUser ? 1 : null));
+  selectedReaction = linkedSignal<number | null>(() =>
+    this.comment().reactionType
+      ? (REACTIONS.find(r => r.name === this.comment().reactionType)?.id ?? null)
+      : (this.comment().isLikedByCurrentUser ? 1 : null)
+  );
   likesCount = linkedSignal(() => this.comment().likesCount);
+  reactions = linkedSignal(() => this.comment().reactions ?? []);
 
   showReplies = signal(false);
   showReactions = signal(false);
@@ -94,24 +101,86 @@ export class CommentItem implements OnInit {
   }
 
   handleLike(): void {
-    if (this.selectedReaction()) {
+    const wasLiked = !!this.selectedReaction();
+    const previousReaction = this.selectedReaction();
+    const previousCount = this.likesCount();
+    const previousReactions = this.reactions();
+
+    // Optimistic UI update
+    if (wasLiked) {
       this.selectedReaction.set(null);
       this.isLiked.set(false);
-      this.likesCount.set(this.likesCount() - 1);
+      this.likesCount.set(previousCount - 1);
     } else {
       this.selectedReaction.set(1); // Default to Like (1)
       this.isLiked.set(true);
-      this.likesCount.set(this.likesCount() + 1);
+      this.likesCount.set(previousCount + 1);
     }
+
+    const reactionToSend = wasLiked ? (previousReaction || 1) : 1;
+
+    this.likeService.ToogleLike({
+      contentType: 4,
+      contentId: this.comment().id,
+      reactionType: reactionToSend
+    }).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.likesCount.set(res.data.likesCount);
+          this.reactions.set(res.data.reactions);
+        } else {
+          this.rollbackLike(previousReaction, previousCount, previousReactions);
+        }
+      },
+      error: (err) => {
+        console.error('like toggle error', err);
+        this.rollbackLike(previousReaction, previousCount, previousReactions);
+      }
+    });
   }
 
   selectReaction(id: number): void {
-    if (!this.selectedReaction()) {
-      this.likesCount.set(this.likesCount() + 1);
+    const wasLiked = !!this.selectedReaction();
+    const previousReaction = this.selectedReaction();
+    const previousCount = this.likesCount();
+    const previousReactions = this.reactions();
+
+    if (!wasLiked) {
+      this.likesCount.set(previousCount + 1);
     }
     this.selectedReaction.set(id);
     this.isLiked.set(true);
     this.showReactions.set(false);
+
+    this.likeService.ToogleLike({
+      contentType: 4,
+      contentId: this.comment().id,
+      reactionType: id
+    }).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.likesCount.set(res.data.likesCount);
+          this.reactions.set(res.data.reactions);
+        } else {
+          this.rollbackLike(previousReaction, previousCount, previousReactions);
+        }
+      },
+      error: (err) => {
+        console.error('select reaction error', err);
+        this.rollbackLike(previousReaction, previousCount, previousReactions);
+      }
+    });
+  }
+
+  private rollbackLike(previousReaction: number | null, previousCount: number, previousReactions: any[]) {
+    this.selectedReaction.set(previousReaction);
+    this.isLiked.set(!!previousReaction);
+    this.likesCount.set(previousCount);
+    this.reactions.set(previousReactions);
+  }
+
+  getEmojiForReaction(name: string): string {
+    return REACTIONS.find(r => r.name === name)?.emoji ?? '👍';
   }
 
   handleReplySubmit(text: string): void {

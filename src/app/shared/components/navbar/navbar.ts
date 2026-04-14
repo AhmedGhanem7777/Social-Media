@@ -78,4 +78,12 @@ export class Navbar implements OnInit {
   closeProfileMenu(): void {
     this.showProfileMenu.set(false);
   }
+
+  onSearch(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
+    if (query.trim()) {
+      this.router.navigate(['/friends'], { queryParams: { q: query, tab: 'search' } });
+      this.showMobileMenu.set(false);
+    }
+  }
 }

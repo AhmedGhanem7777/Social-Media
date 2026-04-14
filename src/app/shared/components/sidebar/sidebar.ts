@@ -41,7 +41,7 @@ export class Sidebar implements OnInit {
     this.friendService.GetSuggestedUsers({ pageIndex: 1, pageSize: 20 }).subscribe({
       next: (users) => {
         if (users.isSuccess) {
-          console.log(users);
+          console.log('Suggested User', users);
 
           this.suggestedUsers.set(users.data.data);
         }

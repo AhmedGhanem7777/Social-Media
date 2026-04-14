@@ -15,7 +15,6 @@ export class PostDetailModal implements OnInit {
   readonly postService = inject(PostService);
 
   postId = input.required<number>();
-  type = input.required<'post' | 'reel'>();
   close = output<void>();
   item = signal<Post | null>(null);
 
@@ -30,7 +29,6 @@ export class PostDetailModal implements OnInit {
     this.postService.GetPostById(id).subscribe({
       next: (res) => {
         console.log('Specific Post', res);
-
         if (res.isSuccess) {
           this.item.set(res.data);
         }

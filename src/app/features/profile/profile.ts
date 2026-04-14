@@ -11,7 +11,7 @@ import { Post as PostService } from '../../core/services/Post/post';
 import { Post } from '../../core/models/post';
 import { Friend } from '../../core/services/Friend/friend';
 import { FriendData } from '../../core/models/friend';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PostCard } from '../../shared/components/post-card/post-card';
 import { Save } from '../../core/services/SaveItem/save';
 import { SaveRequest } from '../../core/models/save';
@@ -31,6 +31,7 @@ export class Profile implements OnInit {
   readonly friendService = inject(Friend);
   readonly activatedRoute = inject(ActivatedRoute);
   readonly saveService = inject(Save);
+  readonly router = inject(Router);
 
   activeTab = signal<Tab>('posts');
   userId = signal<string>('');
@@ -99,7 +100,7 @@ export class Profile implements OnInit {
   }
 
   getFrindsForSpecificUser(): void {
-    this.friendService.GetFriends({ pageIndex: 1, pageSize: 5 }).subscribe({
+    this.friendService.GetFriends({ userId: this.userId(), pageIndex: 1, pageSize: 5 }).subscribe({
       next: (res) => {
         console.log('Friends', res.data.data);
         this.friends.set(res.data.data)
@@ -108,6 +109,12 @@ export class Profile implements OnInit {
 
       }
     })
+  }
+
+  navigateToProfile(userId: string): void {
+    this.router.navigate(['/profile', userId]);
+    console.log('Navigating to profile of user with ID:', userId);
+
   }
 
   readonly stats = computed(() => [

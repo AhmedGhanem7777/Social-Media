@@ -5,11 +5,12 @@ import { REACTIONS } from '../../core/models/reactions';
 import { Save } from '../../core/services/SaveItem/save';
 import { SavedPost, SavedTab } from '../../core/models/save';
 import { PostDetailModal } from '../../shared/components/post-detail-modal/post-detail-modal';
+import { ReelDetailModal } from '../../shared/components/reel-detail-modal/reel-detail-modal';
 
 
 @Component({
   selector: 'app-saved',
-  imports: [PostDetailModal],
+  imports: [PostDetailModal, ReelDetailModal],
   templateUrl: './saved.html',
   styleUrl: './saved.css',
 })
@@ -20,11 +21,11 @@ export class Saved implements OnInit {
   activeTab = signal<SavedTab>('posts');
   savedItems = signal<SavedPost[]>([])
   showDetailModal = signal(false);
-  postId = signal<number>(0);
+  itemId = signal<number>(0);
 
   readonly tabs = computed(() => [
-    { id: 'posts' as SavedTab, label: this.lang.t('profile.posts'), count: this.activeTab() === 'posts' ? this.totalCount() : 0 },
-    { id: 'reels' as SavedTab, label: this.lang.t('nav.reels'), count: this.activeTab() === 'reels' ? this.totalCount() : 0 },
+    { id: 'posts' as SavedTab, label: this.lang.t('profile.posts') },
+    { id: 'reels' as SavedTab, label: this.lang.t('nav.reels') },
   ]);
 
   readonly filteredPosts = computed(() => this.activeTab() === 'posts' ? this.savedItems() : []);
@@ -49,6 +50,7 @@ export class Saved implements OnInit {
         if (res.isSuccess) {
           console.log("Save Item", res);
           this.savedItems.set(res.data);
+          this.itemId.set(res.data.id);
         }
       }, error: (err) => {
         console.log(err);
@@ -69,7 +71,7 @@ export class Saved implements OnInit {
   }
 
   openDetailModal(id: number): void {
-    this.postId.set(id);
+    this.itemId.set(id);
     this.showDetailModal.set(true);
   }
 

@@ -1,10 +1,11 @@
 import { SocialMedia } from "./enum";
 
 export interface SuggestedUser {
-    _id: number;
+    userId: string;
     displayName: string;
     username: string;
     profilePicture: string;
+    mutualFriends: number;
 }
 
 export interface UserProfile {

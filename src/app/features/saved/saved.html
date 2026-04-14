@@ -3,9 +3,6 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-bold">{{ lang.t('saved.title') }}</h1>
-            <p class="text-sm text-muted-foreground mt-1">
-                {{ totalCount() }} {{ lang.t('saved.items') }}
-            </p>
         </div>
     </div>
 
@@ -35,9 +32,6 @@
             }
             }
             {{ tab.label }}
-            <span class="ms-1 text-xs bg-muted text-muted-foreground rounded-full px-1.5 py-0.5">
-                {{ tab.count }}
-            </span>
         </button>
         }
     </div>
@@ -188,7 +182,10 @@
     }
 
     @if (showDetailModal()) {
-    <app-post-detail-modal [postId]="postId()" [type]="activeTab() === 'posts' ? 'post' : 'reel'"
-        (close)="closeDetailModal()"></app-post-detail-modal>
+    @if (activeTab() === 'posts') {
+    <app-post-detail-modal [postId]="itemId()" (close)="closeDetailModal()"></app-post-detail-modal>
+    } @else {
+    <app-reel-detail-modal [reelId]="itemId()" (close)="closeDetailModal()"></app-reel-detail-modal>
+    }
     }
 </div>
