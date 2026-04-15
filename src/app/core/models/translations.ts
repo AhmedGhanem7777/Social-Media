@@ -121,6 +121,8 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chat.emoji': 'Emoji',
         'chat.voiceMessage': 'Voice message',
         'chat.send': 'Send message',
+        'chat.noSelectionTitle': 'Select a conversation to start chatting',
+        'chat.noSelectionSubtitle': 'Choose from your existing conversations or start a new one.',
         // Common
         'common.loading': 'Loading…',
         'common.lightMode': 'Light mode',
@@ -251,6 +253,8 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chat.emoji': 'إيموجي',
         'chat.voiceMessage': 'رسالة صوتية',
         'chat.send': 'إرسال الرسالة',
+        'chat.noSelectionTitle': 'اختر محادثة لبدء الدردشة',
+        'chat.noSelectionSubtitle': 'اختر من محادثاتك الحالية أو ابدأ محادثة جديدة.',
         // Common
         'common.loading': 'جارٍ التحميل…',
         'common.lightMode': 'الوضع الفاتح',

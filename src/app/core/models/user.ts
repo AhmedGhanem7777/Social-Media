@@ -37,3 +37,12 @@ export interface UserCommentedView {
     displayName: string;
     profilePicture: string;
 }
+
+export interface UpdateProfileData {
+    displayName: string;
+    bio: string;
+    profilePicture: File | string | null;
+    coverPicture: File | string | null;
+    city: string;
+    country: string;
+}

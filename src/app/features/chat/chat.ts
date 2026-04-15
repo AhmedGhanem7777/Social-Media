@@ -48,7 +48,7 @@ export class Chat {
   readonly conversations = conversations;
   readonly messages = chatMessages;
 
-  selectedChat = signal<Conversation>(conversations[0]);
+  selectedChat = signal<Conversation | null>(null);
   showMobileChat = signal(false);
   messageText = '';
 

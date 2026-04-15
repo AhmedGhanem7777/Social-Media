@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
+import { UpdateProfileData } from '../../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -11,5 +12,9 @@ export class User {
 
   getUserProfile(userId: string) {
     return this.httpClient.get(`${this.baseUrl}/api/User/profile/${userId}`);
+  }
+
+  updateUserProfile(profileData: UpdateProfileData) {
+    return this.httpClient.put(`${this.baseUrl}/api/User/me`, profileData);
   }
 }
