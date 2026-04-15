@@ -56,9 +56,14 @@
             <div
                 class="absolute end-0 mt-1 w-40 rounded-lg bg-popover border border-border shadow-soft z-50 overflow-hidden animate-scale-in py-1">
                 <button type="button" (click)="closeMoreMenu(); toggleSave(post().id)"
-                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Save
-                    post</button>
-                <button type="button" (click)="closeMoreMenu()"
+                    class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">
+                    @if (isSaved()) {
+                    Unsave post
+                    } @else {
+                    Save post
+                    }
+                </button>
+                <button type="button" (click)="toggleHidePost()"
                     class="w-full cursor-pointer text-start px-3 py-2 text-sm hover:bg-accent transition-colors">Hide
                     post</button>
                 @if (isOwner()) {
@@ -158,8 +163,8 @@
                         <img [src]="user.profilePicture" [alt]="user.displayName" class="w-full h-full object-cover" />
                         } @else {
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full p-2.5 text-muted-foreground"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
@@ -292,6 +297,5 @@
 }
 
 @if (showUserReactionsModal()) {
-<app-reactions-modal [contentId]="post().id"
-    (close)="showUserReactionsModal.set(false)"></app-reactions-modal>
+<app-reactions-modal [contentId]="post().id" (close)="showUserReactionsModal.set(false)"></app-reactions-modal>
 }

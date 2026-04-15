@@ -1,4 +1,5 @@
 <div class="max-w-4xl mx-auto px-4" [dir]="lang.direction()">
+    @if (profileData()) {
 
     <!-- ── Cover Image ───────────────────────────────────────── -->
     <div
@@ -15,10 +16,11 @@
         </div>
         }
         <!-- Gradient overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
 
         <!-- Edit Cover — Button: variant="secondary" size="sm" -->
-        <button type="button" class="absolute bottom-4 end-4 inline-flex items-center justify-center gap-2
+        @if (isOwnerProfile()) {
+        <button type="button" [disabled]="isUpdatingCover()" (click)="onEditCoverClick(coverInput)" class="absolute z-20 bottom-4 end-4 inline-flex items-center justify-center gap-2 cursor-pointer
                    whitespace-nowrap rounded-md text-sm font-medium ring-offset-background
                    transition-all duration-300 focus-visible:outline-none
                    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
@@ -31,8 +33,14 @@
                 <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
                 <circle cx="12" cy="13" r="3" />
             </svg>
+            @if (isUpdatingCover()) {
+            Updating...
+            } @else {
             {{ lang.t('profile.editCover') }}
+            }
         </button>
+        <input #coverInput type="file" class="hidden" accept="image/*" (change)="onCoverPictureSelected($event)" />
+        }
     </div>
 
     <!-- ── Profile Header ─────────────────────────────────────── -->
@@ -63,7 +71,8 @@
                     </div>
                 </div>
                 <!-- Camera overlay — Button: variant="secondary" size="iconSm" -->
-                <button type="button" class="absolute bottom-2 end-2
+                @if (isOwnerProfile()) {
+                <button type="button" (click)="profileInput.click()" class="absolute bottom-2 end-2
                        opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer
                        inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
                        text-sm font-medium ring-offset-background transition-all duration-300
@@ -78,11 +87,15 @@
                         <circle cx="12" cy="13" r="3" />
                     </svg>
                 </button>
+                <input #profileInput type="file" class="hidden" accept="image/*"
+                    (change)="onProfilePictureSelected($event)" />
+                }
             </div>
 
             <!-- Edit Profile — Button: variant="gradient" -->
             <div class="flex gap-2 mt-4 sm:mt-0 sm:mb-4">
-                <button type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
+                @if (isOwnerProfile()) {
+                <button type="button" (click)="openEditModal()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg
                        text-sm font-medium ring-offset-background transition-all duration-300 cursor-pointer
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                        disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]
@@ -96,6 +109,7 @@
                     </svg>
                     {{ lang.t('profile.editProfile') }}
                 </button>
+                }
             </div>
         </div>
 
@@ -126,8 +140,14 @@
                         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                     </svg>
-                    <a href="#"
-                        class="text-primary hover:underline underline-offset-4">{{profileData()?.socialLinks?.length}}</a>
+                    <button type="button" (click)="openLinksModal()"
+                        class="text-primary hover:underline underline-offset-4 cursor-pointer">
+                        @if (isOwnerProfile()) {
+                        Update links ({{profileData()?.socialLinks?.length}})
+                        } @else {
+                        View links ({{profileData()?.socialLinks?.length}})
+                        }
+                    </button>
                 </span>
                 <span class="flex items-center gap-1">
                     <!-- Calendar -->
@@ -195,25 +215,27 @@
 
         <!-- Posts -->
         @if (activeTab() === 'posts') {
+        @if (profilePosts().length > 0) {
         <div class="max-w-2xl mx-auto space-y-6 mt-6">
             @for (post of profilePosts(); track post.id; let i = $index) {
             <div class="animate-fade-in-up" [style.animation-delay]="i * 100 + 'ms'">
                 <app-post-card [post]="post" (postDeleted)="getUserPosts(); getProfileData()" />
             </div>
-            } @empty {
-            <div
-                class="py-12 flex flex-col items-center justify-center text-muted-foreground bg-card rounded-xl border border-dashed border-border">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-3 opacity-20" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="7" height="7" x="3" y="3" rx="1" />
-                    <rect width="7" height="7" x="14" y="3" rx="1" />
-                    <rect width="7" height="7" x="14" y="14" rx="1" />
-                    <rect width="7" height="7" x="3" y="14" rx="1" />
-                </svg>
-                <p class="text-sm font-medium">No posts shared yet</p>
-            </div>
             }
         </div>
+        } @else {
+        <div
+            class="w-full mt-6 py-12 flex flex-col items-center justify-center text-muted-foreground bg-card rounded-xl border border-dashed border-border">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-3 opacity-20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="7" height="7" x="3" y="3" rx="1" />
+                <rect width="7" height="7" x="14" y="3" rx="1" />
+                <rect width="7" height="7" x="14" y="14" rx="1" />
+                <rect width="7" height="7" x="3" y="14" rx="1" />
+            </svg>
+            <p class="text-sm font-medium">No posts shared yet</p>
+        </div>
+        }
         }
 
         <!-- Friends -->
@@ -265,4 +287,187 @@
         }
 
     </div>
+
+    @if (isLinksModalOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-[1px] transition-opacity duration-300"
+            (click)="closeLinksModal()"></div>
+
+        <div
+            class="relative z-10 w-full max-w-2xl rounded-xl border border-border bg-card p-6 shadow-soft animate-fade-in-up transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold">Update social links</h2>
+                <button type="button"
+                    class="text-muted-foreground hover:text-foreground cursor-pointer transition-colors duration-200 hover:rotate-90"
+                    (click)="closeLinksModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-3 max-h-[50vh] overflow-y-auto overflow-x-hidden pe-1">
+                @for (link of editableLinks(); track $index; let i = $index) {
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-[180px_minmax(0,1fr)] gap-2 items-center rounded-lg p-2 -mx-2 transition-all duration-200 hover:translate-x-1">
+                    <button type="button" (click)="openSocialPlatformLink(link.url)"
+                        class="h-10 rounded-md border border-border bg-muted/40 px-3 text-sm flex items-center gap-2 text-foreground transition-all duration-200 group hover:border-primary/40 hover:bg-primary/5 cursor-pointer text-start">
+                        <span
+                            class="inline-flex items-center justify-center h-6 min-w-6 px-1 rounded-full bg-primary/15 text-primary text-[11px] font-semibold transition-transform duration-200 group-hover:scale-110 group-hover:-translate-y-0.5">
+                            @switch (link.platform) {
+                            @case (0) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M13.5 21v-7h2.4l.6-3h-3V9.6c0-.9.3-1.5 1.6-1.5H16V5.4c-.2 0-.9-.1-1.9-.1-2.7 0-4.2 1.6-4.2 4.6V11H8v3h1.9v7h3.6Z" />
+                            </svg>
+                            }
+                            @case (1) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                                <circle cx="12" cy="12" r="4" />
+                                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                            </svg>
+                            }
+                            @case (2) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M4 4h3.8l4 5.2L16.2 4H20l-6.2 7.3L20.7 20h-3.8l-4.6-6-5.1 6H3.3l6.7-7.9L4 4Z" />
+                            </svg>
+                            }
+                            @case (3) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M6.5 8.8h3.2V19H6.5V8.8Zm1.6-4.9A1.9 1.9 0 1 1 8 7.7a1.9 1.9 0 0 1 .1-3.8ZM11.7 8.8h3.1v1.4h.1c.4-.8 1.5-1.7 3.1-1.7 3.3 0 3.9 2.2 3.9 5V19h-3.2v-4.8c0-1.1 0-2.6-1.6-2.6s-1.8 1.2-1.8 2.5V19h-3.2V8.8Z" />
+                            </svg>
+                            }
+                            @case (4) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M14.8 5.2c.7.8 1.8 1.4 3 1.5v2.4a7 7 0 0 1-3-.7v4.3c0 2.9-2.3 5.2-5.2 5.2S4.4 15.6 4.4 12.7s2.3-5.2 5.2-5.2h.6v2.5h-.6a2.7 2.7 0 1 0 2.7 2.7V4h2.5c0 .4.1.8.3 1.2Z" />
+                            </svg>
+                            }
+                            @case (5) {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M21.2 8.4a2.9 2.9 0 0 0-2-2c-1.8-.5-7.2-.5-7.2-.5s-5.4 0-7.2.5a2.9 2.9 0 0 0-2 2A31 31 0 0 0 2.3 12a31 31 0 0 0 .5 3.6 2.9 2.9 0 0 0 2 2c1.8.5 7.2.5 7.2.5s5.4 0 7.2-.5a2.9 2.9 0 0 0 2-2 31 31 0 0 0 .5-3.6 31 31 0 0 0-.5-3.6ZM10.2 15V9.1l5 3-5 2.9Z" />
+                            </svg>
+                            }
+                            @default {
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+                                <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+                            </svg>
+                            }
+                            }
+                        </span>
+                        <span>{{ link.name }}</span>
+                    </button>
+
+                    <input type="url"
+                        class="h-8 w-full min-w-0 rounded-md border border-input bg-background px-2.5 text-xs outline-none transition-all duration-200 hover:border-primary/40 focus:ring-2 focus:ring-ring focus:border-primary"
+                        placeholder="https://example.com/username" [ngModel]="link.url" [readOnly]="!isOwnerProfile()"
+                        (ngModelChange)="updateSocialLinkUrl(i, $event)" [name]="'url-' + i" />
+                </div>
+                }
+            </div>
+
+            <div class="flex justify-end gap-2 pt-5">
+                <button type="button"
+                    class="h-10 px-4 rounded-md border border-border text-sm font-medium hover:bg-accent transition-all duration-200 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+                    (click)="closeLinksModal()">
+                    Cancel
+                </button>
+                @if (isOwnerProfile()) {
+                <button type="button" [disabled]="isUpdatingLinks()" (click)="saveSocialLinks()"
+                    class="h-10 px-4 rounded-md bg-gradient-primary text-white text-sm font-medium disabled:opacity-60 cursor-pointer transition-all duration-200 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0">
+                    @if (isUpdatingLinks()) {
+                    Saving...
+                    } @else {
+                    Save links
+                    }
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (isOwnerProfile() && isEditModalOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50" (click)="closeEditModal()"></div>
+
+        <div class="relative z-10 w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-soft">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold">{{ lang.t('profile.editProfile') }}</h2>
+                <button type="button" class="text-muted-foreground hover:text-foreground cursor-pointer"
+                    (click)="closeEditModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form class="space-y-4" (ngSubmit)="saveProfileInfo()">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Display name</label>
+                    <input type="text"
+                        class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+                        [ngModel]="editDisplayName()" (ngModelChange)="editDisplayName.set($event)"
+                        name="displayName" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Bio</label>
+                    <textarea rows="3"
+                        class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+                        [ngModel]="editBio()" (ngModelChange)="editBio.set($event)" name="bio"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Country</label>
+                        <input type="text"
+                            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+                            [ngModel]="editCountry()" (ngModelChange)="editCountry.set($event)" name="country" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">City</label>
+                        <input type="text"
+                            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+                            [ngModel]="editCity()" (ngModelChange)="editCity.set($event)" name="city" />
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button"
+                        class="h-10 px-4 rounded-md border border-border text-sm font-medium hover:bg-accent transition-colors"
+                        (click)="closeEditModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="isUpdatingProfileInfo()"
+                        class="h-10 px-4 rounded-md bg-gradient-primary text-white text-sm font-medium disabled:opacity-60">
+                        @if (isUpdatingProfileInfo()) {
+                        Saving...
+                        } @else {
+                        Save changes
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+    }
 </div>

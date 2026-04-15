@@ -17,6 +17,7 @@ import { SaveRequest } from '../../../core/models/save';
 import { Save } from '../../../core/services/SaveItem/save';
 import { log } from 'console';
 import { ReactionsModal } from '../reactions-modal/reactions-modal';
+import { Hide } from '../../../core/services/HideItem/hide';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class PostCard implements OnInit {
   readonly postService = inject(PostService);
   readonly commentService = inject(Comment);
   readonly enumService = inject(Enum);
+  readonly hideService = inject(Hide);
   readonly likeService = inject(Like);
   readonly cookieService = inject(CookieService);
   readonly saveService = inject(Save);
@@ -230,6 +232,7 @@ export class PostCard implements OnInit {
     this.isSaved.set(newVal);
     this.savesCount.set(this.savesCount() + (newVal ? 1 : -1));
   }
+
   toggleComments(): void { this.showComments.update(v => !v); }
   toggleMoreMenu(): void { this.showMoreMenu.update(v => !v); }
   closeMoreMenu(): void { this.showMoreMenu.set(false); }
@@ -244,6 +247,19 @@ export class PostCard implements OnInit {
         }
       }, error: (err) => {
         console.log('Delete post error', err);
+      }
+    })
+  }
+
+  toggleHidePost(): void {
+    this.hideService.ToogleHideItem({ contentId: this.post().id, contentType: 1 }).subscribe({
+      next: (res) => {
+        console.log('Hide post', res);
+        if (res.isSuccess) {
+          this.closeMoreMenu();
+        }
+      }, error: (err) => {
+        console.log('Hide post error', err);
       }
     })
   }
