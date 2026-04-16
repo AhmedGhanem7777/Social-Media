@@ -28,7 +28,6 @@ export class Sidebar implements OnInit {
   readonly secondaryNavItems: SidebarNavItem[] = [
     { path: '/saved', icon: 'bookmark', label: 'nav.saved' },
     { path: '/friends', icon: 'users', label: 'profile.friends' },
-    { path: '/settings', icon: 'settings', label: 'nav.settings' },
   ];
 
   suggestedUsers = signal<SuggestedUser[]>([]);

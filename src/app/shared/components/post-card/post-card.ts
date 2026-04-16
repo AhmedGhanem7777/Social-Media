@@ -1,6 +1,7 @@
 import { Component, inject, input, linkedSignal, signal, OnInit, computed, output } from '@angular/core';
 import { LanguageService } from '../../../core/services/Language/language-service';
 import { Post } from '../../../core/models/post';
+import { MediaKind } from '../../../core/models/enum';
 import { Comments } from '../comments/comments';
 import { PostDatePipe } from '../../pipes/post-date-pipe';
 import { REACTIONS } from '../../../core/models/reactions';
@@ -36,6 +37,7 @@ export class PostCard implements OnInit {
   readonly cookieService = inject(CookieService);
   readonly saveService = inject(Save);
   readonly REACTIONS = REACTIONS;
+  readonly MediaKind = MediaKind;
 
   readonly post = input.required<Post>();
   postDeleted = output<number>();

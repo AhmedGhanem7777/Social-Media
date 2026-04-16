@@ -22,7 +22,6 @@ export const routes: Routes = [
             { path: 'profile/:id', canActivate: [authGuard], loadComponent: () => import('./features/profile/profile').then(c => c.Profile), title: 'Profile Page' },
             { path: 'saved', canActivate: [authGuard], loadComponent: () => import('./features/saved/saved').then(c => c.Saved), title: 'Saved Page' },
             { path: 'friends', canActivate: [authGuard], loadComponent: () => import('./features/friends/friends').then(c => c.Friends), title: 'Friends Page' },
-            { path: 'settings', canActivate: [authGuard], loadComponent: () => import('./features/settings/settings').then(c => c.Settings), title: 'Settings Page' },
             { path: 'notifications', canActivate: [authGuard], loadComponent: () => import('./features/notification/notification').then(c => c.Notification), title: 'Notification Page' },
         ]
     },

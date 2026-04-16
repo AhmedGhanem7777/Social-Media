@@ -116,23 +116,35 @@
         </div>
         }
 
-        <!-- Original post image (if shared) -->
+        <!-- Original post media (if shared) -->
         @if (post().contentUrl) {
         <div class="relative group">
+            @if (post().mediaKind === MediaKind.Video) {
+            <video [src]="post().contentUrl" [poster]="post().thumbnailUrl" controls muted loop playsinline
+                class="w-full object-cover max-h-[400px] bg-black">
+            </video>
+            } @else {
             <img [src]="post().contentUrl" alt="Shared content" class="w-full object-cover max-h-[400px]" />
+            }
             <div
-                class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             </div>
         </div>
         }
     </div>
     } @else {
-    <!-- ===== Normal (non-shared) post image ===== -->
+    <!-- ===== Normal (non-shared) post media ===== -->
     @if (post().contentUrl) {
     <div class="relative group">
+        @if (post().mediaKind === MediaKind.Video) {
+        <video [src]="post().contentUrl" [poster]="post().thumbnailUrl" controls muted loop playsinline
+            class="w-full object-cover max-h-[500px] bg-black">
+        </video>
+        } @else {
         <img [src]="post().contentUrl" alt="Post content" class="w-full object-cover max-h-[500px]" />
+        }
         <div
-            class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         </div>
     </div>
     }

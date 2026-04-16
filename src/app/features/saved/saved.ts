@@ -4,6 +4,7 @@ import { Post } from '../../core/models/post';
 import { REACTIONS } from '../../core/models/reactions';
 import { Save } from '../../core/services/SaveItem/save';
 import { SavedPost, SavedTab } from '../../core/models/save';
+import { MediaKind } from '../../core/models/enum';
 import { PostDetailModal } from '../../shared/components/post-detail-modal/post-detail-modal';
 import { ReelDetailModal } from '../../shared/components/reel-detail-modal/reel-detail-modal';
 
@@ -17,6 +18,7 @@ import { ReelDetailModal } from '../../shared/components/reel-detail-modal/reel-
 export class Saved implements OnInit {
   readonly lang = inject(LanguageService);
   readonly saveService = inject(Save);
+  readonly MediaKind = MediaKind;
 
   activeTab = signal<SavedTab>('posts');
   savedItems = signal<SavedPost[]>([])

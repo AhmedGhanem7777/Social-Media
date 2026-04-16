@@ -25,10 +25,23 @@ export interface Reel {
     displayName: string;
     profilePicture: string;
 
+    isFollow: boolean;
+
     isShared: boolean;
     sharedAt?: string | null;
     sharedByUserId?: string | null;
     sharedByDisplayName?: string | null;
     sharedByProfilePicture?: string | null;
     sharedCaption?: string | null;
+}
+
+
+export interface ShareRequest {
+    reelId: number
+    caption?: string
+}
+
+export interface CreateReelRequest {
+    videoUrl: string;
+    caption?: string;
 }

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PostData, PostShareData } from '../../models/post';
+import { CreatePostRequest, PostData, PostShareData } from '../../models/post';
 
 @Injectable({
   providedIn: 'root',
@@ -25,5 +25,9 @@ export class Post {
 
   DeletePost(postId: number): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}/api/Post/${postId}`);
+  }
+
+  CreatePost(createPost: CreatePostRequest): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/api/Post`, createPost);
   }
 }

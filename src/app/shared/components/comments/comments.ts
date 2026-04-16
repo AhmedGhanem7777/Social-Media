@@ -26,18 +26,56 @@ export class Comments implements OnInit {
     this.getCommentsForPost();
   }
 
-  getCommentsForPost(): void {
-    this.commentService.GetCommentsForContent({ contentType: this.contentType(), contentId: this.postId(), pageIndex: 1, pageSize: 5 }).subscribe({
+  pageIndex = 1;
+  readonly pageSize = 5;
+  hasMoreComments = signal(false);
+  isLoadingMore = signal(false);
+
+  getCommentsForPost(reset = true): void {
+    if (reset) {
+      this.pageIndex = 1;
+      this.hasMoreComments.set(false);
+    }
+    this.isLoadingMore.set(true);
+
+    this.commentService.GetCommentsForContent({ contentType: this.contentType(), contentId: this.postId(), pageIndex: this.pageIndex, pageSize: this.pageSize }).subscribe({
       next: (res: any) => {
         console.log('Comments: ', res);
-        this.selectedComments.set(res.data.data);
+        
+        let fetchedComments: Comment[] = [];
+        if (res && res.data) {
+          const rawData = res.data.data || res.data || [];
+          fetchedComments = Array.isArray(rawData) ? rawData : [];
+        } else if (Array.isArray(res)) {
+          fetchedComments = res;
+        }
 
+        if (reset) {
+          this.selectedComments.set(fetchedComments);
+        } else {
+          // Filter out duplicates in case of new comments pushing pagination
+          this.selectedComments.update(curr => {
+            const existingIds = new Set(curr.map(c => c.id));
+            const uniqueNew = fetchedComments.filter(c => !existingIds.has(c.id));
+            return [...curr, ...uniqueNew];
+          });
+        }
+        
+        this.hasMoreComments.set(fetchedComments.length === this.pageSize);
+        this.isLoadingMore.set(false);
       }, error: (err) => {
         console.log(err);
-
+        this.isLoadingMore.set(false);
       }
     })
   }
+
+  loadMoreComments(): void {
+    if (this.isLoadingMore() || !this.hasMoreComments()) return;
+    this.pageIndex++;
+    this.getCommentsForPost(false);
+  }
+
 
   handleCommentSubmit(text: string): void {
     const commentData: CreateCommentRequest = {

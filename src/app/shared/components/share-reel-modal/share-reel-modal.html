@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between border-b border-border p-4">
             <h3 class="text-lg font-semibold">{{ lang.t('feed.sharePost') }}</h3>
             <button (click)="onClose()" class="rounded-lg p-2 hover:bg-accent transition-colors cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 h-5" viewBox="0 0 24 24" fill="none"
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
@@ -21,32 +21,34 @@
             <!-- Share Caption Input -->
             <div class="flex gap-3">
                 <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-primary/10">
-                    <img [src]="post().profilePicture" [alt]="post().displayName" class="w-full h-full object-cover">
+                    <img [src]="reel().profilePicture" [alt]="reel().displayName" class="w-full h-full object-cover">
                 </div>
                 <textarea [placeholder]="lang.t('feed.sharePlaceholder')" (input)="onCaptionInput($event)"
                     class="flex-1 min-h-[100px] bg-transparent border-none focus:ring-0 resize-none text-sm leading-relaxed p-2"
                     autofocus></textarea>
             </div>
 
-            <!-- Post Preview -->
+            <!-- Reel Preview -->
             <div class="rounded-xl border border-border overflow-hidden bg-accent/20">
                 <div class="flex items-center gap-3 p-3">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img [src]="post().profilePicture" [alt]="post().displayName"
+                        <img [src]="reel().profilePicture" [alt]="reel().displayName"
                             class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <p class="text-xs font-semibold">{{ post().displayName }}</p>
-                        <p class="text-[10px] text-muted-foreground">{{ post().createdAt | postDate }}</p>
+                        <p class="text-xs font-semibold">{{ reel().displayName }}</p>
+                        <p class="text-[10px] text-muted-foreground">{{ reel().createdAt | postDate }}</p>
                     </div>
                 </div>
+                <!-- Caption -->
+                @if (reel().caption) {
                 <div class="px-3 pb-3">
-                    <p class="text-xs line-clamp-3 text-muted-foreground">{{ post().content }}</p>
+                    <p class="text-xs line-clamp-3 text-muted-foreground">{{ reel().caption }}</p>
                 </div>
-                @if (post().contentUrl) {
+                }
+                <!-- Video thumbnail -->
                 <div class="relative h-40">
-                    <img [src]="post().thumbnailUrl || post().contentUrl" class="w-full h-full object-cover">
-                    @if (post().thumbnailUrl) {
+                    <img [src]="reel().thumbnailUrl || reel().videoUrl" class="w-full h-full object-cover bg-black">
                     <!-- Video Indicator -->
                     <div class="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none">
                         <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center">
@@ -55,9 +57,7 @@
                             </svg>
                         </div>
                     </div>
-                    }
                 </div>
-                }
             </div>
         </div>
 

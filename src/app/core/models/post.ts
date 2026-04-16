@@ -1,7 +1,11 @@
+import { MediaKind } from "./enum";
+
 export interface SharedPost {
     user: { name: string; username: string; avatar: string };
     content: string;
     image?: string;
+    mediaKind: MediaKind;
+    thumbnailUrl?: string;
     timeAgo: string;
 }
 
@@ -9,6 +13,8 @@ export interface Post {
     id: number;
     content: string;
     contentUrl: string;
+    mediaKind: MediaKind;
+    thumbnailUrl?: string;
 
     createdAt: string;
 
@@ -29,6 +35,7 @@ export interface Post {
     displayName: string;
     profilePicture: string;
 
+    isFollow: boolean;
     isShared: boolean;
 
     sharedAt?: string;
@@ -52,4 +59,9 @@ export interface PostShareData {
 export interface ReactionSummary {
     reactionType: string;
     count: number;
+}
+
+export interface CreatePostRequest {
+    content: string;
+    contentUrl?: string;
 }

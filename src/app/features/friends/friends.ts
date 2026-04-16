@@ -2,13 +2,13 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { LanguageService } from '../../core/services/Language/language-service';
 import { Friend as FriendService } from '../../core/services/Friend/friend';
 import { CookieService } from 'ngx-cookie-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FriendData } from '../../core/models/friend';
 import { FriendsTab } from '../../core/models/tab';
 
 @Component({
   selector: 'app-friends',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './friends.html',
   styleUrl: './friends.css',
 })

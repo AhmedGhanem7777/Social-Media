@@ -42,8 +42,16 @@
         <div class="aspect-square relative group cursor-pointer overflow-hidden rounded-xl animate-scale-in"
             [style.animation-delay]="i * 50 + 'ms'">
             @if (item.contentUrl) {
-            <img [src]="item.contentUrl" alt=""
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+            <img [src]="item.mediaKind === MediaKind.Video ? (item.thumbnailUrl || item.contentUrl) : item.contentUrl"
+                alt="" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+            @if (item.mediaKind === MediaKind.Video) {
+            <div class="absolute top-2 start-2 z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white/90 drop-shadow-md" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="m15 12-8.5 5V7L15 12Z" />
+                </svg>
+            </div>
+            }
             } @else {
             <div class="w-full h-full bg-muted flex items-center justify-center rounded-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-muted-foreground/20" viewBox="0 0 24 24"
@@ -58,9 +66,10 @@
             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100
                             transition-opacity flex flex-col items-center justify-center gap-2">
                 <div class="flex items-center gap-1 text-white font-semibold text-sm">
-                    <div class="flex -space-x-1.5 items-center mr-0.5">
+                    <div class="flex -space-x-1.5 items-center mr-1">
                         @for (reaction of item.reactions; track reaction.reactionType) {
-                        <span class="text-sm leading-none drop-shadow-sm">{{ getEmojiForReaction(reaction.reactionType)
+                        <span class="text-base leading-none drop-shadow-sm">{{
+                            getEmojiForReaction(reaction.reactionType)
                             }}</span>
                         }
                     </div>
@@ -114,7 +123,7 @@
         <div class="aspect-[9/16] relative group cursor-pointer overflow-hidden rounded-xl animate-scale-in"
             [style.animation-delay]="i * 50 + 'ms'">
             @if (item.contentUrl) {
-            <img [src]="item.contentUrl" alt=""
+            <img [src]="item.thumbnailUrl || item.contentUrl" alt=""
                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
             } @else {
             <div class="w-full h-full bg-muted flex items-center justify-center rounded-xl">
